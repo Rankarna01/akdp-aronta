@@ -35,6 +35,9 @@
                <a href="{{ route('admin.kursi.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-primary/5 hover:text-primary transition text-sm">
     <i class="fa-solid fa-chair w-4 text-center"></i> Data Kursi
 </a>
+               <a href="{{ route('admin.metode-pembayaran-master.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-primary/5 hover:text-primary transition text-sm">
+    <i class="fa-solid fa-money-check-dollar w-4 text-center"></i> Metode Pembayaran
+</a>
             </div>
         </div>
 

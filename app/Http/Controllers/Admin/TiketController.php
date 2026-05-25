@@ -89,8 +89,12 @@ class TiketController extends Controller
             return response()->json(['success' => false, 'message' => 'Gagal! Kursi tersebut sudah dipesan.'], 422);
         }
 
-        // Generate Kode Tiket Unik
-        $kodeTiket = 'TKT-' . date('Ymd') . '-' . strtoupper(Str::random(5));
+        // Generate Kode Tiket (ACP + Nomor Pintu + Nomor Bangku)
+        $jadwal = Jadwal::with('armada')->findOrFail($request->jadwal_id);
+        $nomorPintu = $jadwal->armada->nomor_pintu ?? '000';
+        $kursi = Kursi::findOrFail($request->kursi_id);
+        $nomorBangku = preg_replace('/[^0-9A-Za-z]/', '', $kursi->nomor_kursi);
+        $kodeTiket = 'ACP' . $nomorPintu . $nomorBangku;
         
         $data = $request->all();
         $data['kode_tiket'] = $kodeTiket;

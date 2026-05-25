@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\TiketDigitalController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\LogAktivitasController;
+use App\Http\Controllers\Admin\MetodePembayaranMasterController;
 
 // Import Controller Driver
 use App\Http\Controllers\Driver\DashboardController as DriverDashboardController;
@@ -98,6 +99,10 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::post('/kursi/generate', [KursiController::class, 'generate'])->name('kursi.generate');
     Route::get('/kursi/layout/{armada_id}', [KursiController::class, 'getLayout'])->name('kursi.layout');
     Route::resource('kursi', KursiController::class)->except(['create', 'show']);
+
+    // Modul Metode Pembayaran Master
+    Route::get('/metode-pembayaran-master/data', [MetodePembayaranMasterController::class, 'data'])->name('metode-pembayaran-master.data');
+    Route::resource('metode-pembayaran-master', MetodePembayaranMasterController::class)->except(['create', 'show']);
 
     // Modul Jadwal
     Route::get('/jadwal/data', [JadwalController::class, 'data'])->name('jadwal.data');

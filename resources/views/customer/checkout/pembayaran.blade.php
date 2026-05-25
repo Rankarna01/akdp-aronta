@@ -29,9 +29,10 @@
                     <i class="fa-solid fa-building-columns text-primary mt-0.5"></i>
                     <div>
                         <select name="metode_pembayaran" required class="w-full text-xs font-bold text-gray-800 bg-transparent border-none p-0 focus:ring-0 appearance-none cursor-pointer">
-                            <option value="Transfer Bank BCA">Bank BCA - 1234567890 (a.n PT Aronta)</option>
-                            <option value="Transfer Bank Mandiri">Bank Mandiri - 0987654321 (a.n PT Aronta)</option>
-                            <option value="E-Wallet DANA">DANA - 081234567890</option>
+                            <option value="" disabled selected>Pilih Bank / E-Wallet</option>
+                            @foreach($metode_pembayaran as $metode)
+                                <option value="{{ $metode->nama_bank }}">{{ $metode->nama_bank }} - {{ $metode->nomor_rekening }} (a.n {{ $metode->atas_nama }})</option>
+                            @endforeach
                         </select>
                         <p class="text-[9px] text-secondary mt-1">Silakan transfer sesuai nominal ke rekening di atas.</p>
                     </div>

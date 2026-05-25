@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Penumpang; // Tambahkan import model Penumpang
 
 class AuthController extends Controller
 {
@@ -48,13 +49,17 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        // Tambahkan validasi untuk NIK, HP, dan Jenis Kelamin
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed', // Pastikan ada input password_confirmation di view
+            'password' => 'required|string|min:6|confirmed',
+            'nik' => 'required|string|max:20|unique:penumpang,nik',
+            'no_hp' => 'required|string|max:15',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
         ]);
 
-        // Buat user baru, set default role menjadi 'customer'
+        // 1. Buat user baru di tabel users
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -62,7 +67,16 @@ class AuthController extends Controller
             'role' => 'customer',
         ]);
 
-        // Otomatis login setelah daftar
+        // 2. Buat profil penumpang yang berelasi dengan user tersebut
+        Penumpang::create([
+            'user_id' => $user->id,
+            'nik' => $request->nik,
+            'nama' => $request->name, // Ambil dari input nama
+            'no_hp' => $request->no_hp,
+            'jenis_kelamin' => $request->jenis_kelamin,
+        ]);
+
+        // 3. Otomatis login setelah daftar
         Auth::login($user);
 
         return redirect()->route('customer.home');

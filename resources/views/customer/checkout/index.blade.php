@@ -45,28 +45,28 @@
 
             <div class="mb-4">
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Nama Lengkap</label>
-                <input type="text" name="nama" required value="{{ Auth::user()->name }}" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-xs font-semibold text-gray-800">
+                <input type="text" name="nama" required value="{{ $penumpang->nama ?? Auth::user()->name }}" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-xs font-semibold text-gray-800">
             </div>
 
             <div class="mb-4">
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">NIK (KTP)</label>
-                <input type="number" name="nik" required class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-xs font-semibold text-gray-800" placeholder="Masukkan 16 digit NIK">
+                <input type="number" name="nik" required value="{{ $penumpang->nik ?? '' }}" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-xs font-semibold text-gray-800" placeholder="Masukkan 16 digit NIK">
             </div>
 
             <div class="mb-4">
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">No. Handphone</label>
-                <input type="number" name="no_hp" required class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-xs font-semibold text-gray-800" placeholder="Contoh: 08123456789">
+                <input type="number" name="no_hp" required value="{{ $penumpang->no_hp ?? '' }}" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-xs font-semibold text-gray-800" placeholder="Contoh: 08123456789">
             </div>
 
             <div class="mb-4">
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Jenis Kelamin</label>
                 <div class="flex items-center gap-6 mt-1">
                     <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" name="jenis_kelamin" value="Laki-laki" required class="w-4 h-4 text-primary bg-gray-100 border-gray-300 focus:ring-primary">
+                        <input type="radio" name="jenis_kelamin" value="Laki-laki" required {{ (isset($penumpang) && $penumpang->jenis_kelamin == 'Laki-laki') ? 'checked' : '' }} class="w-4 h-4 text-primary bg-gray-100 border-gray-300 focus:ring-primary">
                         <span class="ml-2 text-xs font-semibold text-gray-700">Laki-laki</span>
                     </label>
                     <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" name="jenis_kelamin" value="Perempuan" required class="w-4 h-4 text-primary bg-gray-100 border-gray-300 focus:ring-primary">
+                        <input type="radio" name="jenis_kelamin" value="Perempuan" required {{ (isset($penumpang) && $penumpang->jenis_kelamin == 'Perempuan') ? 'checked' : '' }} class="w-4 h-4 text-primary bg-gray-100 border-gray-300 focus:ring-primary">
                         <span class="ml-2 text-xs font-semibold text-gray-700">Perempuan</span>
                     </label>
                 </div>

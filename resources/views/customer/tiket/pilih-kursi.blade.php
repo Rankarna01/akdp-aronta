@@ -21,57 +21,68 @@
 
 <div class="px-6 mt-6 pb-32">
     
-    <div class="flex items-center justify-center gap-5 mb-8">
+    <div class="flex items-center justify-center gap-6 mb-8">
         <div class="flex items-center gap-2">
-            <div class="w-4 h-4 rounded border-2 border-gray-300 bg-white"></div>
-            <span class="text-[10px] font-bold text-gray-500">Tersedia</span>
+            <div class="w-4 h-4 rounded border-2 border-primary bg-white"></div>
+            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Tersedia</span>
         </div>
         <div class="flex items-center gap-2">
-            <div class="w-4 h-4 rounded bg-primary border-2 border-primary"></div>
-            <span class="text-[10px] font-bold text-gray-500">Terisi</span>
+            <div class="w-4 h-4 rounded bg-gray-100 border-2 border-gray-300"></div>
+            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Terisi</span>
         </div>
         <div class="flex items-center gap-2">
             <div class="w-4 h-4 rounded bg-success border-2 border-success"></div>
-            <span class="text-[10px] font-bold text-gray-500">Dipilih</span>
+            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Dipilih</span>
         </div>
     </div>
 
-    <div class="max-w-[340px] mx-auto bg-white border-[6px] border-gray-300 rounded-[3.5rem] p-6 pt-10 relative shadow-sm">
+    <div class="max-w-[320px] mx-auto bg-white border-[6px] border-gray-200 rounded-[3rem] p-5 pt-8 pb-10 relative shadow-sm">
         
-        <div class="grid grid-cols-5 gap-y-4 gap-x-3">
+        <div class="grid grid-cols-[1fr_1fr_12px_1fr_1fr] gap-y-4 gap-x-2.5">
             @php
                 $total = count($semuaKursi);
                 $i = 0;
+                $rowCount = 1;
             @endphp
 
-            {{-- BARIS 1: [Kursi 1] [Kursi 2] [Lorong] [Kosong] [Supir] --}}
+            {{-- BARIS 1: [1] [2] | [Kosong] [Supir] --}}
             @if($total > 0) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
             @if($total > $i) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
             
-            <div class="w-full flex items-center justify-center"><div class="w-1 h-full bg-gray-200 rounded-full opacity-50"></div></div>
+            {{-- Garis Lorong Vertikal --}}
+            <div class="flex items-center justify-center"><div class="w-[2px] h-full bg-gray-200 rounded-full opacity-60"></div></div>
+            
+            {{-- Ruang Kosong (Pintu) --}}
             <div></div>
-            <div class="aspect-square flex flex-col items-center justify-center rounded-xl border-[3px] border-gray-300 bg-gray-100 text-gray-500 font-bold text-[8px] shadow-sm">
-                <i class="fa-solid fa-steering-wheel text-xl mb-1"></i>Supir
+            
+            {{-- Kotak Supir --}}
+            <div class="aspect-square w-full rounded-xl border-2 border-gray-300 bg-gray-100 text-gray-500 flex items-center justify-center text-[8px] uppercase tracking-wider font-bold shadow-sm">
+                Supir
             </div>
 
-            {{-- BARIS 2 - 5 --}}
-            @php $rowCount = 2; @endphp
-            @while($i < $total && $rowCount <= 5)
-                @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp
+            {{-- BARIS 2 - 5: Normal 2-2 --}}
+            @while($i < $total && $rowCount <= 4) {{-- Maksimal 4 baris setelah baris pertama --}}
+                {{-- Kiri 2 --}}
+                @if($i < $total) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
                 @if($i < $total) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
                 
-                <div class="w-full flex items-center justify-center"><div class="w-1 h-full bg-gray-200 rounded-full opacity-50"></div></div>
+                {{-- Garis Lorong Vertikal --}}
+                <div class="flex items-center justify-center"><div class="w-[2px] h-full bg-gray-200 rounded-full opacity-60"></div></div>
                 
+                {{-- Kanan 2 --}}
                 @if($i < $total) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
                 @if($i < $total) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
+                
                 @php $rowCount++; @endphp
             @endwhile
 
-            {{-- BARIS 6: SISANYA DITUMPUK --}}
+            {{-- BARIS 6: SISANYA DITUMPUK (Baris Paling Belakang) --}}
             @if($i < $total)
-                <div class="col-span-5 flex justify-between items-center gap-2 mt-1">
+                <div class="col-span-5 flex justify-center gap-2.5 mt-2">
                     @while($i < $total)
-                        <div class="flex-1 w-full">@include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi])</div>
+                        <div class="flex-1 w-full max-w-[55px]">
+                            @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi])
+                        </div>
                         @php $i++; @endphp
                     @endwhile
                 </div>
@@ -100,11 +111,18 @@
 
 @push('scripts')
 <script>
-    $(document).ready(function() { $('nav.absolute.bottom-0').hide(); });
+    $(document).ready(function() { 
+        $('nav.absolute.bottom-0').hide(); // Menyembunyikan menu navigasi bawah 
+    });
 
     function selectSeat(element, kursiId, nomorKursi) {
-        $('.seat-btn').removeClass('bg-success border-success text-white').addClass('bg-white border-gray-300 text-gray-600');
-        $(element).removeClass('bg-white border-gray-300 text-gray-600').addClass('bg-success border-success text-white');
+        // 1. Reset semua kursi yang bisa diklik kembali ke state Awal (Border Biru, Background Putih)
+        $('.seat-btn').removeClass('bg-success border-success text-white').addClass('bg-white border-primary text-primary');
+        
+        // 2. Ubah kursi yang baru saja diklik menjadi state Aktif (Background Hijau, Border Hijau)
+        $(element).removeClass('bg-white border-primary text-primary').addClass('bg-success border-success text-white');
+        
+        // 3. Update data form checkout
         $('#selected-seat-text').text(nomorKursi);
         $('#input-kursi-id').val(kursiId);
         $('#btn-lanjutkan').removeClass('bg-gray-300 cursor-not-allowed').addClass('bg-primary hover:bg-blue-900 active:scale-95 shadow-lg shadow-primary/30').prop('disabled', false);

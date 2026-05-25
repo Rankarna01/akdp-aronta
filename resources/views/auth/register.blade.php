@@ -42,7 +42,7 @@
 
         @if ($errors->any())
             <div class="mb-5 p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl text-xs font-medium">
-                <ul>
+                <ul class="space-y-1">
                     @foreach ($errors->all() as $error)
                         <li>- {{ $error }}</li>
                     @endforeach
@@ -58,6 +58,31 @@
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-regular fa-user text-gray-400"></i></div>
                     <input type="text" name="name" value="{{ old('name') }}" required class="input-modern w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm transition-all focus:bg-white" placeholder="Nama sesuai KTP">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">NIK (No. KTP)</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-regular fa-id-card text-gray-400"></i></div>
+                    <input type="number" name="nik" value="{{ old('nik') }}" required class="input-modern w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm transition-all focus:bg-white" placeholder="16 Digit NIK">
+                </div>
+            </div>
+
+            <div class="mb-4 grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Nomor HP</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-phone text-gray-400"></i></div>
+                        <input type="number" name="no_hp" value="{{ old('no_hp') }}" required class="input-modern w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm transition-all focus:bg-white" placeholder="0812...">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Jenis Kelamin</label>
+                    <select name="jenis_kelamin" required class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm transition-all focus:bg-white text-gray-700">
+                        <option value="Laki-laki" {{ old('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                        <option value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                    </select>
                 </div>
             </div>
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Armada;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ArmadaController extends Controller
 {
@@ -22,6 +23,7 @@ class ArmadaController extends Controller
             $query->where(function($q) use ($search) {
                 $q->where('nama_bus', 'LIKE', "%{$search}%")
                   ->orWhere('plat_nomor', 'LIKE', "%{$search}%")
+                  ->orWhere('nomor_pintu', 'LIKE', "%{$search}%")
                   ->orWhere('tipe_bus', 'LIKE', "%{$search}%");
             });
         }
@@ -34,14 +36,21 @@ class ArmadaController extends Controller
     {
         $request->validate([
             'nama_bus' => 'required|string|max:255',
-            // Ubah unique:armadas menjadi unique:armada
             'plat_nomor' => 'required|string|max:20|unique:armada,plat_nomor',
+            'nomor_pintu' => 'nullable|string|max:10',
             'tipe_bus' => 'required|in:Ekonomi,Bisnis,Executive,Royal Class',
             'total_kursi' => 'required|integer|min:1|max:60',
             'status' => 'required|in:Aktif,Maintenance,Non-Aktif',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        Armada::create($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('gambar')) {
+            $data['gambar'] = $request->file('gambar')->store('armada', 'public');
+        }
+
+        Armada::create($data);
 
         return response()->json([
             'success' => true,
@@ -61,14 +70,24 @@ class ArmadaController extends Controller
 
         $request->validate([
             'nama_bus' => 'required|string|max:255',
-            // Ubah unique:armadas menjadi unique:armada
             'plat_nomor' => 'required|string|max:20|unique:armada,plat_nomor,' . $id,
+            'nomor_pintu' => 'nullable|string|max:10',
             'tipe_bus' => 'required|in:Ekonomi,Bisnis,Executive,Royal Class',
             'total_kursi' => 'required|integer|min:1|max:60',
             'status' => 'required|in:Aktif,Maintenance,Non-Aktif',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        $armada->update($request->all());
+        $data = $request->except(['gambar']);
+
+        if ($request->hasFile('gambar')) {
+            if ($armada->gambar && Storage::disk('public')->exists($armada->gambar)) {
+                Storage::disk('public')->delete($armada->gambar);
+            }
+            $data['gambar'] = $request->file('gambar')->store('armada', 'public');
+        }
+
+        $armada->update($data);
 
         return response()->json([
             'success' => true,

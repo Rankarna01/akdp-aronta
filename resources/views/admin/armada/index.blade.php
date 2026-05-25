@@ -26,7 +26,9 @@
             <thead>
                 <tr class="bg-gray-50 border-b border-gray-100 text-secondary text-xs uppercase font-semibold tracking-wider">
                     <th class="px-6 py-4">Nama Bus</th>
+                    <th class="px-6 py-4">No. Pintu</th>
                     <th class="px-6 py-4">Plat Nomor</th>
+                    <th class="px-6 py-4">Gambar</th>
                     <th class="px-6 py-4">Tipe Kelas</th>
                     <th class="px-6 py-4 text-center">Kapasitas Kursi</th>
                     <th class="px-6 py-4">Status</th>
@@ -49,13 +51,20 @@
             <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
         
-        <form id="armada-form" onsubmit="saveForm(event)">
+        <form id="armada-form" onsubmit="saveForm(event)" enctype="multipart/form-data">
             <input type="hidden" id="armada-id" name="id">
             <div class="p-6 space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Nama Bus / Seri</label>
-                    <input type="text" id="nama_bus" name="nama_bus" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" placeholder="Contoh: Jetbus 5 Aronta 01">
-                    <span class="text-xs text-danger mt-1 hidden error-field" id="err-nama_bus"></span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Nama Bus / Seri</label>
+                        <input type="text" id="nama_bus" name="nama_bus" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" placeholder="Contoh: Jetbus 5 Aronta 01">
+                        <span class="text-xs text-danger mt-1 hidden error-field" id="err-nama_bus"></span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Nomor Pintu</label>
+                        <input type="text" id="nomor_pintu" name="nomor_pintu" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" placeholder="Contoh: 01">
+                        <span class="text-xs text-danger mt-1 hidden error-field" id="err-nomor_pintu"></span>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -91,6 +100,16 @@
                             <option value="Non-Aktif">Non-Aktif</option>
                         </select>
                         <span class="text-xs text-danger mt-1 hidden error-field" id="err-status"></span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Gambar Armada (Opsional)</label>
+                    <input type="file" id="gambar" name="gambar" class="input-modern w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm" accept="image/*">
+                    <span class="text-xs text-danger mt-1 hidden error-field" id="err-gambar"></span>
+                    <div id="gambar-preview-container" class="mt-3 hidden">
+                        <p class="text-xs text-gray-500 mb-1">Gambar saat ini:</p>
+                        <img id="gambar-preview" src="" alt="Preview Gambar" class="w-32 h-24 object-cover rounded-xl border border-gray-200 shadow-sm">
                     </div>
                 </div>
             </div>
@@ -138,7 +157,9 @@
                         htmlRows += `
                             <tr class="hover:bg-gray-50/80 transition">
                                 <td class="px-6 py-4 font-medium text-gray-800">${item.nama_bus}</td>
-                                <td class="px-6 py-4 font-mono text-xs bg-gray-50 inline-block my-3 px-2 py-1 rounded-lg border border-gray-100 ml-6">${item.plat_nomor}</td>
+                                <td class="px-6 py-4 font-semibold text-primary">${item.nomor_pintu ? item.nomor_pintu : '-'}</td>
+                                <td class="px-6 py-4"><span class="font-mono text-xs bg-gray-50 inline-block px-2 py-1 rounded-lg border border-gray-100">${item.plat_nomor}</span></td>
+                                <td class="px-6 py-4">${item.gambar ? `<img src="/storage/${item.gambar}" alt="${item.nama_bus}" class="w-16 h-12 object-cover rounded-md shadow-sm border border-gray-200">` : `<div class="w-16 h-12 bg-gray-100 rounded-md flex items-center justify-center border border-gray-200"><i class="fa-solid fa-bus text-gray-300"></i></div>`}</td>
                                 <td class="px-6 py-4">${item.tipe_bus}</td>
                                 <td class="px-6 py-4 text-center font-semibold">${item.total_kursi}</td>
                                 <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-medium ${badgeColor}">${item.status}</span></td>
@@ -180,6 +201,7 @@
     function openCreateModal() {
         $('#armada-form')[0].reset();
         $('#armada-id').val('');
+        $('#gambar-preview-container').addClass('hidden');
         $('.error-field').addClass('hidden').html('');
         $('#modal-title').text('Tambah Data Armada Baru');
         $('#armada-modal').removeClass('hidden').addClass('flex');
@@ -194,10 +216,19 @@
             success: function(data) {
                 $('#armada-id').val(data.id);
                 $('#nama_bus').val(data.nama_bus);
+                $('#nomor_pintu').val(data.nomor_pintu);
                 $('#plat_nomor').val(data.plat_nomor);
                 $('#total_kursi').val(data.total_kursi);
                 $('#tipe_bus').val(data.tipe_bus);
                 $('#status').val(data.status);
+                
+                if (data.gambar) {
+                    $('#gambar-preview').attr('src', '/storage/' + data.gambar);
+                    $('#gambar-preview-container').removeClass('hidden');
+                } else {
+                    $('#gambar-preview-container').addClass('hidden');
+                }
+                $('#gambar').val('');
                 
                 $('#modal-title').text('Ubah Informasi Data Armada');
                 $('#armada-modal').removeClass('hidden').addClass('flex');
@@ -218,13 +249,18 @@
         let id = $('#armada-id').val();
         let url = id ? `/admin/armada/${id}` : "{{ route('admin.armada.store') }}"; 
         
-        let type = id ? "PUT" : "POST";
-        let formData = $('#armada-form').serialize();
+        let type = "POST";
+        let formData = new FormData($('#armada-form')[0]);
+        if(id) {
+            formData.append('_method', 'PUT');
+        }
 
         $.ajax({
             url: url,
             type: type,
             data: formData,
+            contentType: false,
+            processData: false,
             success: function(response) {
                 if (response.success) {
                     closeModal();

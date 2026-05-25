@@ -12,6 +12,7 @@ use App\Models\Kursi;
 use App\Models\Penumpang;
 use App\Models\Tiket;
 use App\Models\Pembayaran;
+use App\Models\MetodePembayaranMaster;
 
 class CheckoutController extends Controller
 {
@@ -26,10 +27,13 @@ class CheckoutController extends Controller
         $jadwal = Jadwal::with(['rute', 'armada'])->findOrFail($request->jadwal_id);
         $kursi = Kursi::findOrFail($request->kursi_id);
         
+        // Cari data penumpang berdasarkan user_id yang sedang login
+        $penumpang = \App\Models\Penumpang::where('user_id', Auth::id())->first();
+        
         // Tangkap catatan titik naik dari URL
         $catatan_titik = $request->query('catatan_titik');
 
-        return view('customer.checkout.index', compact('jadwal', 'kursi', 'catatan_titik'));
+        return view('customer.checkout.index', compact('jadwal', 'kursi', 'catatan_titik', 'penumpang'));
     }
 
     // Proses Simpan Tiket & Penumpang
@@ -69,10 +73,13 @@ class CheckoutController extends Controller
             );
 
             // 3. Ambil harga dari jadwal
-            $jadwal = Jadwal::findOrFail($request->jadwal_id);
+            $jadwal = Jadwal::with('armada')->findOrFail($request->jadwal_id);
 
-            // 4. Generate Kode Tiket
-            $kodeTiket = 'AKDP' . date('ymd') . strtoupper(Str::random(4));
+            // 4. Generate Kode Tiket (ACP + Nomor Pintu + Nomor Bangku)
+            $nomorPintu = $jadwal->armada->nomor_pintu ?? '000';
+            $kursi = Kursi::findOrFail($request->kursi_id);
+            $nomorBangku = preg_replace('/[^0-9A-Za-z]/', '', $kursi->nomor_kursi);
+            $kodeTiket = 'ACP' . $nomorPintu . $nomorBangku;
 
             // 5. Buat Tiket (Simpan dengan Catatan Titik)
             $tiket = Tiket::create([
@@ -110,7 +117,10 @@ class CheckoutController extends Controller
             return redirect()->route('customer.home')->with('error', 'Pembayaran sedang diproses atau sudah lunas.');
         }
 
-        return view('customer.checkout.pembayaran', compact('tiket'));
+        // Ambil metode pembayaran aktif
+        $metode_pembayaran = MetodePembayaranMaster::where('status', 'Aktif')->get();
+
+        return view('customer.checkout.pembayaran', compact('tiket', 'metode_pembayaran'));
     }
 
     // Proses Simpan Bukti Pembayaran

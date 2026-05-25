@@ -78,11 +78,11 @@
             </div>
 
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
-                <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 mb-3">
-                    <img id="md-qrcode-img" src="" alt="QR Code E-Tiket" class="w-36 h-36">
+                <p class="text-[10px] text-gray-400 font-bold uppercase mb-2">Kode Tiket</p>
+                <div class="bg-gray-50 py-4 px-6 rounded-xl border border-gray-200 mb-3 w-full">
+                    <p id="md-kode-tiket-text" class="font-mono text-3xl font-extrabold tracking-widest text-primary">ACP000</p>
                 </div>
-                <p id="md-kode-tiket-text" class="font-mono text-xs font-bold text-gray-800 tracking-wider">AKDP2505200001</p>
-                <p class="text-[9px] text-gray-400 mt-2 max-w-[200px]">Tunjukkan QR Code ini kepada petugas atau supir saat naik bus.</p>
+                <p class="text-[10px] text-gray-500 max-w-[200px]">Tunjukkan Kode Tiket ini kepada petugas atau supir saat naik bus.</p>
             </div>
 
         </div>
@@ -157,8 +157,7 @@
                 let statusTxt = data.status_tiket === 'Digunakan' ? 'Selesai' : data.status_tiket;
                 $('#md-status-tiket').text(statusTxt);
 
-                // Buat QR Code instan dari API QRServer berdasarkan kode tiket unik
-                $('#md-qrcode-img').attr('src', `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${data.kode_tiket}`);
+                // Menghapus penggunaan QR Code sesuai permintaan
 
                 // Animasi Slide Up Muncul
                 $('#detail-ticket-modal').removeClass('hidden').addClass('flex');

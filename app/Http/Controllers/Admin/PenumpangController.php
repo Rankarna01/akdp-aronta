@@ -16,7 +16,8 @@ class PenumpangController extends Controller
     public function data(Request $request)
     {
         $search = $request->get('search');
-        $query = Penumpang::query();
+        // Load relasi user
+        $query = Penumpang::with('user');
 
         if (!empty($search)) {
             $query->where(function($q) use ($search) {
