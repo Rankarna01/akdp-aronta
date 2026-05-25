@@ -5,21 +5,19 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class AuthController extends Controller
 {
-    // Menampilkan halaman login
     public function showLoginForm()
     {
-        // Jika user sudah login, langsung arahkan ke dashboard masing-masing
         if (Auth::check()) {
             return $this->redirectBasedOnRole(Auth::user()->role);
         }
-        
         return view('auth.login');
     }
 
-    // Memproses data login
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
@@ -27,32 +25,57 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        // Coba melakukan autentikasi
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            
-            // Redirect sesuai role
             return $this->redirectBasedOnRole(Auth::user()->role);
         }
 
-        // Jika gagal
         return back()->withErrors([
             'email' => 'Email atau password yang Anda masukkan salah.',
         ])->onlyInput('email');
     }
 
-    // Memproses logout
+    // ========================================================
+    // FITUR REGISTRASI BARU (KHUSUS CUSTOMER)
+    // ========================================================
+    public function showRegistrationForm()
+    {
+        if (Auth::check()) {
+            return $this->redirectBasedOnRole(Auth::user()->role);
+        }
+        return view('auth.register');
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed', // Pastikan ada input password_confirmation di view
+        ]);
+
+        // Buat user baru, set default role menjadi 'customer'
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'customer',
+        ]);
+
+        // Otomatis login setelah daftar
+        Auth::login($user);
+
+        return redirect()->route('customer.home');
+    }
+
     public function logout(Request $request)
     {
         Auth::logout();
-        
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
-        return redirect()->route('login');
+        return redirect()->route('landing'); // Setelah logout, balik ke Landing Page
     }
 
-    // Fungsi private untuk handle redirect dinamis
     private function redirectBasedOnRole($role)
     {
         return match ($role) {

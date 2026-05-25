@@ -38,7 +38,12 @@
                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary transition"><i class="fa-solid fa-gear mr-2"></i> Pengaturan</a>
                     <div class="border-t border-gray-100 my-1"></div>
                     <!-- Form Logout Dummy -->
-                    <a href="#" class="block px-4 py-2 text-sm text-danger hover:bg-danger/10 transition"><i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> Keluar</a>
+                    <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
+    @csrf
+    <button type="submit" class="w-full text-left block px-4 py-2 text-sm text-danger hover:bg-danger/10 transition cursor-pointer">
+        <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> Keluar
+    </button>
+</form>
                 </div>
             </div>
         </div>

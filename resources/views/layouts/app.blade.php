@@ -157,6 +157,27 @@
                     });
                 }
             });
+
+            $(document).ready(function() {
+        // Script untuk Dropdown Sidebar
+        $('.toggle-dropdown').on('click', function(e) {
+            e.preventDefault();
+            
+            let $this = $(this);
+            let $submenu = $this.next('.submenu');
+            let $icon = $this.find('.chevron-icon');
+
+            // Tutup dropdown lain yang sedang terbuka (Opsional: hapus jika ingin bisa buka banyak sekaligus)
+            $('.submenu').not($submenu).slideUp(300);
+            $('.chevron-icon').not($icon).removeClass('rotate-180');
+            $('.toggle-dropdown').not($this).removeClass('bg-primary/5 text-primary');
+
+            // Toggle dropdown yang diklik
+            $submenu.slideToggle(300);
+            $icon.toggleClass('rotate-180');
+            $this.toggleClass('bg-primary/5 text-primary');
+        });
+    });
         });
     </script>
 
