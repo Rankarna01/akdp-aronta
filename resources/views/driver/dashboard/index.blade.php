@@ -24,11 +24,11 @@
                 <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
                     <i class="fa-solid fa-bus text-primary"></i> {{ $jadwalAktif->armada->nama_bus }}
                 </h2>
-                <p class="text-xs text-secondary mt-1 ml-6 flex items-center gap-1">
-                    <i class="fa-regular fa-id-card"></i> Plat {{ $jadwalAktif->armada->plat_nomor }}
+                <p class="text-xs text-secondary mt-1 ml-6 flex items-center gap-1 font-mono">
+                    <i class="fa-regular fa-id-card"></i> Pintu: {{ $jadwalAktif->armada->nomor_pintu ?? '-' }} | Plat: {{ $jadwalAktif->armada->plat_nomor }}
                 </p>
             @else
-                <h2 class="text-lg font-bold text-gray-800">Tidak ada jadwal</h2>
+                <h2 class="text-lg font-bold text-gray-800">Tidak ada penugasan</h2>
             @endif
         </div>
         <div class="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center text-primary text-2xl">
@@ -37,11 +37,11 @@
     </div>
 </div>
 
-<div class="px-6 mt-6 space-y-6">
+<div class="px-6 mt-6 space-y-6 pb-24">
     
     @if($jadwalAktif)
         <div>
-            <h3 class="text-sm font-bold text-gray-800 mb-4">Jadwal Aktif</h3>
+            <h3 class="text-sm font-bold text-gray-800 mb-4">Jadwal Aktif Hari Ini</h3>
             
             <div class="flex items-center gap-3 mb-4">
                 <h2 class="text-2xl font-bold text-gray-800">{{ $jadwalAktif->rute->kota_asal }}</h2>
@@ -78,11 +78,11 @@
 
             <h3 class="text-sm font-bold text-gray-800 mb-3">Aksi Cepat</h3>
             <div class="grid grid-cols-2 gap-4">
-                <a href="#" class="bg-primary hover:bg-blue-900 text-white rounded-2xl p-4 shadow-lg shadow-primary/30 flex flex-col items-center justify-center gap-2 transition text-center">
+                <a href="{{ route('driver.status.index') }}" class="bg-primary hover:bg-blue-900 text-white rounded-2xl p-4 shadow-lg shadow-primary/30 flex flex-col items-center justify-center gap-2 transition text-center active:scale-95">
                     <i class="fa-regular fa-paper-plane text-2xl mb-1"></i>
                     <span class="text-xs font-medium leading-tight">Update Status<br>Perjalanan</span>
                 </a>
-                <a href="#" class="bg-white hover:bg-gray-50 text-primary border border-gray-100 rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 transition text-center">
+                <a href="{{ route('driver.penumpang.index') }}" class="bg-white hover:bg-gray-50 text-primary border border-gray-100 rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 transition text-center active:scale-95">
                     <i class="fa-solid fa-user-check text-2xl mb-1"></i>
                     <span class="text-xs font-medium leading-tight">Lihat Daftar<br>Penumpang</span>
                 </a>

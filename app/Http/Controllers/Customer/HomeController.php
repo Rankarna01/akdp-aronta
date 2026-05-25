@@ -1,33 +1,47 @@
 <?php
 
-namespace App\Http\Controllers\Customer;
+namespace App\Http\Controllers\Driver;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Jadwal;
 use Carbon\Carbon;
+use App\Models\Jadwal;
+use App\Models\Tiket;
 
-class HomeController extends Controller
+class DashboardController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
+        // 1. Ambil tanggal hari ini berdasarkan zona waktu WIB (Asia/Jakarta)
+        $hariIni = Carbon::now('Asia/Jakarta')->format('Y-m-d');
 
-        // Ambil 5 jadwal terdekat mulai dari hari ini yang statusnya masih 'Menunggu' atau 'Berangkat'
-        // Hitung juga jumlah tiket yang sudah dipesan (tidak dibatalkan) untuk mengetahui sisa kursi
-        $jadwalTerdekat = Jadwal::with(['rute', 'armada'])
-            ->withCount(['tiket' => function ($query) {
-                // Asumsi tiket yang dipesan = Paid/Pending (mengurangi slot kursi)
-                $query->where('status_tiket', '!=', 'Dibatalkan');
-            }])
-            ->whereDate('tanggal', '>=', Carbon::today())
+        // 2. Tarik jadwal aktif
+        $jadwalAktif = Jadwal::with(['rute', 'armada'])
+            ->where('supir_id', Auth::id()) // Pastikan milik supir yg login
+            ->where('tanggal', '>=', $hariIni) // KUNCI: Abaikan jadwal hari kemarin yang nyangkut
             ->whereIn('status', ['Menunggu', 'Berangkat'])
+            ->orderByRaw("FIELD(status, 'Berangkat', 'Menunggu')") // Prioritaskan yg sedang 'Berangkat'
             ->orderBy('tanggal', 'asc')
             ->orderBy('waktu_berangkat', 'asc')
-            ->limit(5)
-            ->get();
+            ->first();
 
-        return view('customer.home.index', compact('user', 'jadwalTerdekat'));
+        $totalPenumpang = 0;
+        $kursiKosong = 0;
+
+        if ($jadwalAktif) {
+            // Hitung total penumpang (Tiket aktif)
+            $totalPenumpang = Tiket::where('jadwal_id', $jadwalAktif->id)
+                                   ->where('status_tiket', '!=', 'Dibatalkan')
+                                   ->count();
+
+            // Hitung sisa kursi kosong
+            $totalKursi = $jadwalAktif->armada->total_kursi ?? 0;
+            $kursiKosong = $totalKursi - $totalPenumpang;
+            
+            if ($kursiKosong < 0) $kursiKosong = 0; // Mencegah nilai minus
+        }
+
+        return view('driver.dashboard.index', compact('jadwalAktif', 'totalPenumpang', 'kursiKosong'));
     }
 }

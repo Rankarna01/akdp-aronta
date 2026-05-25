@@ -1,4 +1,4 @@
-<aside class="w-64 bg-surface h-screen shadow-halus flex flex-col transition-all duration-300 flex-shrink-0 border-r border-gray-100" id="sidebar">
+<aside class="w-64 bg-surface h-screen shadow-halus flex flex-col transition-transform duration-300 flex-shrink-0 border-r border-gray-100 fixed md:relative z-50 transform -translate-x-full md:translate-x-0" id="sidebar">
     <div class="h-16 flex items-center justify-center border-b border-gray-100 px-4">
         <div class="flex items-center gap-3">
             <i class="fa-solid fa-bus text-2xl text-primary"></i>

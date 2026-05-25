@@ -136,7 +136,6 @@
             // 3. Global Error Handling
             $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
                 if (jqxhr.status === 422) {
-                    // Validasi form error akan di-handle per modul
                     return; 
                 }
                 if (jqxhr.status === 401 || jqxhr.status === 419) {
@@ -158,26 +157,51 @@
                 }
             });
 
-            $(document).ready(function() {
-        // Script untuk Dropdown Sidebar
-        $('.toggle-dropdown').on('click', function(e) {
-            e.preventDefault();
+            // 4. Sidebar Dropdown Logic
+            $('.toggle-dropdown').on('click', function(e) {
+                e.preventDefault();
+                let $this = $(this);
+                let $submenu = $this.next('.submenu');
+                let $icon = $this.find('.chevron-icon');
+
+                $('.submenu').not($submenu).slideUp(300);
+                $('.chevron-icon').not($icon).removeClass('rotate-180');
+                $('.toggle-dropdown').not($this).removeClass('bg-primary/5 text-primary');
+
+                $submenu.slideToggle(300);
+                $icon.toggleClass('rotate-180');
+                $this.toggleClass('bg-primary/5 text-primary');
+            });
+
+            // 5. Responsive Mobile Sidebar Toggle
+            const $sidebar = $('#sidebar');
+            const $backdrop = $('<div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden md:hidden"></div>');
+            $('body').append($backdrop);
+
+            $('#mobile-sidebar-toggle').on('click', function() {
+                $sidebar.removeClass('-translate-x-full');
+                $backdrop.removeClass('hidden').fadeIn(300);
+            });
+
+            $backdrop.on('click', function() {
+                $sidebar.addClass('-translate-x-full');
+                $backdrop.fadeOut(300, function() {
+                    $(this).addClass('hidden');
+                });
+            });
+
+            // Handle resize to automatically reset state
+            $(window).resize(function() {
+                if ($(window).width() >= 768) { // md breakpoint
+                    $sidebar.removeClass('-translate-x-full');
+                    $backdrop.addClass('hidden').hide();
+                } else {
+                    $sidebar.addClass('-translate-x-full');
+                }
+            });
             
-            let $this = $(this);
-            let $submenu = $this.next('.submenu');
-            let $icon = $this.find('.chevron-icon');
-
-            // Tutup dropdown lain yang sedang terbuka (Opsional: hapus jika ingin bisa buka banyak sekaligus)
-            $('.submenu').not($submenu).slideUp(300);
-            $('.chevron-icon').not($icon).removeClass('rotate-180');
-            $('.toggle-dropdown').not($this).removeClass('bg-primary/5 text-primary');
-
-            // Toggle dropdown yang diklik
-            $submenu.slideToggle(300);
-            $icon.toggleClass('rotate-180');
-            $this.toggleClass('bg-primary/5 text-primary');
-        });
-    });
+            // Trigger resize once to set initial state correctly on load
+            $(window).trigger('resize');
         });
     </script>
 
