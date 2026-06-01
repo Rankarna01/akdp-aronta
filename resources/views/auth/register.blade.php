@@ -21,7 +21,7 @@
         .input-modern:focus { outline: none; border-color: #1e3a8a; box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.15); }
     </style>
 </head>
-<body class="bg-background font-sans antialiased flex items-center justify-center min-h-screen relative overflow-hidden py-10">
+<body class="bg-background font-sans antialiased flex items-center justify-center min-h-screen relative overflow-x-hidden py-10">
     
     <div class="absolute -top-40 -right-40 w-96 h-96 bg-primary rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
     <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
