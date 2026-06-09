@@ -15,7 +15,7 @@
         <div class="bg-surface rounded-xl p-6 shadow-halus border border-gray-100 flex items-center justify-between group hover:shadow-md transition-all">
             <div>
                 <p class="text-sm font-medium text-secondary mb-1">Total Armada</p>
-                <h3 class="text-2xl font-bold text-gray-800">24 <span class="text-xs font-normal text-success bg-success/10 px-2 py-0.5 rounded-full ml-1">Unit</span></h3>
+                <h3 class="text-2xl font-bold text-gray-800">{{ $totalArmada }} <span class="text-xs font-normal text-success bg-success/10 px-2 py-0.5 rounded-full ml-1">Unit</span></h3>
             </div>
             <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300">
                 <i class="fa-solid fa-bus"></i>
@@ -26,7 +26,7 @@
         <div class="bg-surface rounded-xl p-6 shadow-halus border border-gray-100 flex items-center justify-between group hover:shadow-md transition-all">
             <div>
                 <p class="text-sm font-medium text-secondary mb-1">Total Supir</p>
-                <h3 class="text-2xl font-bold text-gray-800">32 <span class="text-xs font-normal text-success bg-success/10 px-2 py-0.5 rounded-full ml-1">Orang</span></h3>
+                <h3 class="text-2xl font-bold text-gray-800">{{ $totalSupir }} <span class="text-xs font-normal text-success bg-success/10 px-2 py-0.5 rounded-full ml-1">Orang</span></h3>
             </div>
             <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
                 <i class="fa-solid fa-id-card"></i>
@@ -37,7 +37,7 @@
         <div class="bg-surface rounded-xl p-6 shadow-halus border border-gray-100 flex items-center justify-between group hover:shadow-md transition-all">
             <div>
                 <p class="text-sm font-medium text-secondary mb-1">Tiket Terjual (Hari Ini)</p>
-                <h3 class="text-2xl font-bold text-gray-800">145 <span class="text-xs font-normal text-success bg-success/10 px-2 py-0.5 rounded-full ml-1">+12%</span></h3>
+                <h3 class="text-2xl font-bold text-gray-800">{{ $tiketHariIni }} <span class="text-xs font-normal text-success bg-success/10 px-2 py-0.5 rounded-full ml-1">Tiket</span></h3>
             </div>
             <div class="w-12 h-12 rounded-full bg-orange-50 text-warning flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-warning group-hover:text-white transition-all duration-300">
                 <i class="fa-solid fa-ticket"></i>
@@ -48,7 +48,7 @@
         <div class="bg-surface rounded-xl p-6 shadow-halus border border-gray-100 flex items-center justify-between group hover:shadow-md transition-all">
             <div>
                 <p class="text-sm font-medium text-secondary mb-1">Pendapatan (Bulan Ini)</p>
-                <h3 class="text-xl font-bold text-gray-800">Rp 45.2M</h3>
+                <h3 class="text-xl font-bold text-gray-800">Rp {{ number_format($pendapatanBulanIni, 0, ',', '.') }}</h3>
             </div>
             <div class="w-12 h-12 rounded-full bg-emerald-50 text-success flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-success group-hover:text-white transition-all duration-300">
                 <i class="fa-solid fa-wallet"></i>
@@ -84,11 +84,11 @@
             <div class="mt-4 grid grid-cols-2 gap-4 text-center">
                 <div>
                     <p class="text-xs text-secondary">Beroperasi</p>
-                    <p class="text-lg font-bold text-primary">18</p>
+                    <p class="text-lg font-bold text-primary">{{ $armadaBeroperasi }}</p>
                 </div>
                 <div>
                     <p class="text-xs text-secondary">Maintenance</p>
-                    <p class="text-lg font-bold text-warning">6</p>
+                    <p class="text-lg font-bold text-warning">{{ $armadaMaintenance }}</p>
                 </div>
             </div>
         </div>
@@ -126,10 +126,10 @@
         new Chart(ctxSales, {
             type: 'line',
             data: {
-                labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+                labels: {!! json_encode($salesLabels) !!},
                 datasets: [{
                     label: 'Tiket Terjual',
-                    data: [120, 150, 140, 180, 220, 300, 280],
+                    data: {!! json_encode($salesData) !!},
                     borderColor: '#1e3a8a', // primary color
                     backgroundColor: gradientSales,
                     borderWidth: 3,
@@ -166,7 +166,7 @@
             data: {
                 labels: ['Beroperasi', 'Maintenance'],
                 datasets: [{
-                    data: [18, 6],
+                    data: [{{ $armadaBeroperasi }}, {{ $armadaMaintenance }}],
                     backgroundColor: ['#1e3a8a', '#f59e0b'], // Primary & Warning
                     borderWidth: 0,
                     hoverOffset: 4
