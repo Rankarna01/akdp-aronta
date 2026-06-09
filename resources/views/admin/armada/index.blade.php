@@ -85,10 +85,8 @@
                         <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Tipe Kelas Bus</label>
                         <select id="tipe_bus" name="tipe_bus" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm">
                             <option value="">-- Pilih Kelas --</option>
-                            <option value="Ekonomi">Ekonomi</option>
-                            <option value="Bisnis">Bisnis</option>
+                            <option value="Economy">Economy</option>
                             <option value="Executive">Executive</option>
-                            <option value="Royal Class">Royal Class</option>
                         </select>
                         <span class="text-xs text-danger mt-1 hidden error-field" id="err-tipe_bus"></span>
                     </div>

@@ -26,7 +26,6 @@
             <thead>
                 <tr class="bg-gray-50 border-b border-gray-100 text-secondary text-xs uppercase font-semibold tracking-wider">
                     <th class="px-6 py-4">Rute Perjalanan (Asal - Tujuan)</th>
-                    <th class="px-6 py-4">Estimasi / Jarak</th>
                     <th class="px-6 py-4">Harga Dasar</th>
                     <th class="px-6 py-4 text-center">Status</th>
                     <th class="px-6 py-4 text-center">Aksi</th>
@@ -63,18 +62,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-gray-100 pt-4 mt-2">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Estimasi Waktu</label>
-                        <input type="text" id="estimasi_waktu" name="estimasi_waktu" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" placeholder="Contoh: 12 Jam">
-                        <span class="text-xs text-danger mt-1 hidden error-field" id="err-estimasi_waktu"></span>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Jarak (KM)</label>
-                        <input type="number" id="jarak_km" name="jarak_km" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" placeholder="Opsional">
-                        <span class="text-xs text-danger mt-1 hidden error-field" id="err-jarak_km"></span>
-                    </div>
-                </div>
+
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -136,8 +124,6 @@
                 } else {
                     response.data.forEach(function(item) {
                         let badgeColor = item.status === 'Aktif' ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger';
-                        let jarak = item.jarak_km ? `${item.jarak_km} KM` : '-';
-                        
                         htmlRows += `
                             <tr class="hover:bg-gray-50/80 transition">
                                 <td class="px-6 py-4">
@@ -149,10 +135,6 @@
                                             <p class="font-bold text-gray-800">${item.kota_asal} <i class="fa-solid fa-arrow-right mx-1 text-gray-400 text-xs"></i> ${item.kota_tujuan}</p>
                                         </div>
                                     </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <p class="text-sm font-medium text-gray-800"><i class="fa-regular fa-clock text-secondary mr-1"></i> ${item.estimasi_waktu}</p>
-                                    <p class="text-xs text-secondary mt-0.5">${jarak}</p>
                                 </td>
                                 <td class="px-6 py-4 font-semibold text-primary">
                                     ${formatRupiah(item.harga_dasar)}
@@ -212,8 +194,6 @@
                 $('#rute-id').val(data.id);
                 $('#kota_asal').val(data.kota_asal);
                 $('#kota_tujuan').val(data.kota_tujuan);
-                $('#jarak_km').val(data.jarak_km);
-                $('#estimasi_waktu').val(data.estimasi_waktu);
                 $('#harga_dasar').val(data.harga_dasar);
                 $('#status').val(data.status);
                 

@@ -61,9 +61,9 @@ class PembayaranController extends Controller
             if ($request->action === 'approve') {
                 // Ubah status pembayaran menjadi Lunas
                 $pembayaran->update(['status' => 'Lunas']);
-                // Aktifkan tiket pelanggan menjadi Paid
-                $tiket->update(['status_pembayaran' => 'Paid', 'status_tiket' => 'Aktif']);
-                $message = 'Pembayaran berhasil diverifikasi! Tiket pelanggan sekarang aktif.';
+                // Aktifkan tiket pelanggan menjadi Paid dan langsung Selesai (Digunakan)
+                $tiket->update(['status_pembayaran' => 'Paid', 'status_tiket' => 'Digunakan']);
+                $message = 'Pembayaran berhasil diverifikasi! Tiket pelanggan telah selesai.';
             } else {
                 // Ubah status pembayaran menjadi Ditolak
                 $pembayaran->update(['status' => 'Ditolak']);

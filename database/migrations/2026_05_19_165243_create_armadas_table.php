@@ -13,7 +13,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_bus');
             $table->string('plat_nomor')->unique();
-            $table->enum('tipe_bus', ['Ekonomi', 'Bisnis', 'Executive', 'Royal Class']);
+            $table->enum('tipe_bus', ['Economy', 'Executive']);
             $table->integer('total_kursi');
             $table->enum('status', ['Aktif', 'Maintenance', 'Non-Aktif'])->default('Aktif');
             $table->timestamps();

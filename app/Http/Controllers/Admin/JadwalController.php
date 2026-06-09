@@ -54,6 +54,46 @@ class JadwalController extends Controller
             'status' => 'required|in:Menunggu,Berangkat,Selesai,Dibatalkan',
         ]);
 
+        $jadwalWaktu = \Carbon\Carbon::parse($request->tanggal . ' ' . $request->waktu_berangkat, 'Asia/Jakarta');
+        $now = \Carbon\Carbon::now('Asia/Jakarta');
+
+        if ($jadwalWaktu->isPast()) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => ['waktu_berangkat' => ['Waktu keberangkatan tidak boleh kurang dari waktu saat ini.']]
+            ], 422);
+        }
+
+        // Cek bentrok Armada (jarak kurang dari 8 jam)
+        $conflictArmada = Jadwal::where('armada_id', $request->armada_id)
+            ->where('tanggal', $request->tanggal)
+            ->get()
+            ->filter(function($j) use ($jadwalWaktu) {
+                return \Carbon\Carbon::parse($j->tanggal . ' ' . $j->waktu_berangkat, 'Asia/Jakarta')->diffInHours($jadwalWaktu) < 8;
+            })->count() > 0;
+
+        if ($conflictArmada) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => ['armada_id' => ['Armada ini sudah memiliki jadwal yang berdekatan di tanggal yang sama (bentrok).']]
+            ], 422);
+        }
+
+        // Cek bentrok Supir (jarak kurang dari 8 jam)
+        $conflictSupir = Jadwal::where('supir_id', $request->supir_id)
+            ->where('tanggal', $request->tanggal)
+            ->get()
+            ->filter(function($j) use ($jadwalWaktu) {
+                return \Carbon\Carbon::parse($j->tanggal . ' ' . $j->waktu_berangkat, 'Asia/Jakarta')->diffInHours($jadwalWaktu) < 8;
+            })->count() > 0;
+
+        if ($conflictSupir) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => ['supir_id' => ['Supir ini sudah memiliki jadwal yang berdekatan di tanggal yang sama (bentrok).']]
+            ], 422);
+        }
+
         Jadwal::create($request->all());
 
         return response()->json([
@@ -82,6 +122,48 @@ class JadwalController extends Controller
             'harga_tiket' => 'required|numeric|min:0',
             'status' => 'required|in:Menunggu,Berangkat,Selesai,Dibatalkan',
         ]);
+
+        $jadwalWaktu = \Carbon\Carbon::parse($request->tanggal . ' ' . $request->waktu_berangkat, 'Asia/Jakarta');
+        $now = \Carbon\Carbon::now('Asia/Jakarta');
+
+        if ($jadwalWaktu->isPast() && ($jadwal->tanggal != $request->tanggal || $jadwal->waktu_berangkat != $request->waktu_berangkat)) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => ['waktu_berangkat' => ['Waktu keberangkatan tidak boleh kurang dari waktu saat ini.']]
+            ], 422);
+        }
+
+        // Cek bentrok Armada
+        $conflictArmada = Jadwal::where('armada_id', $request->armada_id)
+            ->where('tanggal', $request->tanggal)
+            ->where('id', '!=', $id)
+            ->get()
+            ->filter(function($j) use ($jadwalWaktu) {
+                return \Carbon\Carbon::parse($j->tanggal . ' ' . $j->waktu_berangkat, 'Asia/Jakarta')->diffInHours($jadwalWaktu) < 8;
+            })->count() > 0;
+
+        if ($conflictArmada) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => ['armada_id' => ['Armada ini sudah memiliki jadwal yang berdekatan di tanggal yang sama (bentrok).']]
+            ], 422);
+        }
+
+        // Cek bentrok Supir
+        $conflictSupir = Jadwal::where('supir_id', $request->supir_id)
+            ->where('tanggal', $request->tanggal)
+            ->where('id', '!=', $id)
+            ->get()
+            ->filter(function($j) use ($jadwalWaktu) {
+                return \Carbon\Carbon::parse($j->tanggal . ' ' . $j->waktu_berangkat, 'Asia/Jakarta')->diffInHours($jadwalWaktu) < 8;
+            })->count() > 0;
+
+        if ($conflictSupir) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => ['supir_id' => ['Supir ini sudah memiliki jadwal yang berdekatan di tanggal yang sama (bentrok).']]
+            ], 422);
+        }
 
         $jadwal->update($request->all());
 

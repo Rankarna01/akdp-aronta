@@ -14,8 +14,6 @@ class Rute extends Model
     protected $fillable = [
         'kota_asal',
         'kota_tujuan',
-        'jarak_km',
-        'estimasi_waktu',
         'harga_dasar',
         'status',
     ];

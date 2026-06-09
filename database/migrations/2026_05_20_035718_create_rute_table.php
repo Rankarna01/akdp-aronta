@@ -13,8 +13,6 @@ return new class extends Migration
             $table->id();
             $table->string('kota_asal');
             $table->string('kota_tujuan');
-            $table->integer('jarak_km')->nullable();
-            $table->string('estimasi_waktu')->nullable(); // contoh: "12 Jam 30 Menit"
             $table->bigInteger('harga_dasar'); // Harga standar tiket
             $table->enum('status', ['Aktif', 'Non-Aktif'])->default('Aktif');
             $table->timestamps();

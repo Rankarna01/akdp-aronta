@@ -32,8 +32,6 @@ class RuteController extends Controller
         $request->validate([
             'kota_asal' => 'required|string|max:255',
             'kota_tujuan' => 'required|string|max:255',
-            'jarak_km' => 'nullable|integer|min:1',
-            'estimasi_waktu' => 'required|string|max:255',
             'harga_dasar' => 'required|numeric|min:0',
             'status' => 'required|in:Aktif,Non-Aktif',
         ]);
@@ -59,8 +57,6 @@ class RuteController extends Controller
         $request->validate([
             'kota_asal' => 'required|string|max:255',
             'kota_tujuan' => 'required|string|max:255',
-            'jarak_km' => 'nullable|integer|min:1',
-            'estimasi_waktu' => 'required|string|max:255',
             'harga_dasar' => 'required|numeric|min:0',
             'status' => 'required|in:Aktif,Non-Aktif',
         ]);
