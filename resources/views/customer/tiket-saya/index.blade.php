@@ -27,7 +27,7 @@
 <div class="px-6 mt-5 space-y-4 pb-24" id="ticket-list-container">
     </div>
 
-<div id="detail-ticket-modal" class="fixed inset-0 z-50 hidden items-end justify-center bg-slate-900/40 backdrop-blur-sm p-0 animate-fade-in">
+<div id="detail-ticket-modal" class="fixed inset-0 z-[60] hidden items-end justify-center bg-slate-900/40 backdrop-blur-sm p-0 animate-fade-in">
     <div class="bg-[#f8fafc] w-full max-w-md rounded-t-[2.5rem] shadow-2xl border-t border-gray-100 transform transition-all translate-y-full duration-300 flex flex-col max-h-[92%]" id="modal-card">
         
         <div class="px-6 py-4 bg-white border-b border-gray-100 flex items-center justify-between shrink-0 rounded-t-[2.5rem]">
