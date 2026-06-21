@@ -80,7 +80,7 @@
     </div>
 </div>
 
-<div class="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white border-t border-gray-100 p-4 px-6 z-50 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)] flex items-center justify-between">
+<div class="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-white border-t border-gray-100 p-4 px-6 z-50 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)] flex items-center justify-between pb-[calc(1rem+env(safe-area-inset-bottom))]">
     <div>
         <p class="text-[10px] text-gray-400 font-bold uppercase mb-0.5">Total Pembayaran</p>
         <h3 class="text-base font-bold text-primary">Rp {{ number_format($jadwal->harga_tiket, 0, ',', '.') }}</h3>
@@ -95,7 +95,7 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-        $('nav.absolute.bottom-0').hide(); // Sembunyikan bottom menu global
+        $('nav').hide(); // Sembunyikan bottom menu global
     });
 
     function submitCheckout(e) {
