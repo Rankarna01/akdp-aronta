@@ -43,7 +43,7 @@ class CheckoutController extends Controller
             'jadwal_id' => 'required|exists:jadwal,id',
             'kursi_id' => 'required|exists:kursi,id',
             'nama' => 'required|string|max:255',
-            'nik' => 'required|string|max:20',
+            'nik' => 'required|digits:16',
             'no_hp' => 'required|string|max:15',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'catatan_titik' => 'nullable|string|max:255' // Validasi field baru

@@ -12,8 +12,7 @@ return new class extends Migration
         Schema::create('monitoring_perjalanan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('jadwal_id')->constrained('jadwal')->onDelete('cascade');
-            $table->string('lokasi_sekarang');
-            $table->enum('status', ['Persiapan', 'Di Perjalanan', 'Istirahat', 'Kendala', 'Tiba'])->default('Di Perjalanan');
+            $table->enum('status', ['Persiapan', 'Dalam Perjalanan', 'Kendala', 'Sampai'])->default('Persiapan');
             $table->text('keterangan')->nullable();
             $table->timestamps(); // create_at akan menjadi penanda waktu update lokasi
         });

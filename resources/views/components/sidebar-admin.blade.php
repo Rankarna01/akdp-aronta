@@ -106,12 +106,6 @@
                 <a href="{{ route('admin.laporan.penumpang') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition text-sm {{ request()->routeIs('admin.laporan.penumpang') ? 'text-primary font-bold bg-primary/10' : 'text-secondary hover:bg-primary/5 hover:text-primary' }}">
                     <i class="fa-solid fa-clipboard-user w-4 text-center"></i> Laporan Penumpang
                 </a>
-                <a href="#" class="flex items-center justify-between px-3 py-2 rounded-lg text-secondary hover:bg-primary/5 hover:text-primary transition text-sm">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-bell w-4 text-center"></i> Notifikasi
-                    </div>
-                    <span class="bg-danger text-white text-[10px] px-2 py-0.5 rounded-full">New</span>
-                </a>
                 <a href="{{ route('admin.log-aktivitas.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition text-sm {{ request()->routeIs('admin.log-aktivitas.*') ? 'text-primary font-bold bg-primary/10' : 'text-secondary hover:bg-primary/5 hover:text-primary' }}">
                     <i class="fa-solid fa-clock-rotate-left w-5 text-center"></i> Log Aktivitas
                 </a>

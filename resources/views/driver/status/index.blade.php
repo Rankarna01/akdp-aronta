@@ -27,30 +27,27 @@
             <input type="hidden" name="jadwal_id" value="{{ $jadwalAktif->id }}">
 
             <div>
-                <label class="block text-xs font-bold text-gray-600 uppercase mb-2">Lokasi Terkini</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-primary">
-                        <i class="fa-solid fa-map-location-dot"></i>
-                    </span>
-                    <input type="text" name="lokasi_sekarang" required class="input-modern w-full pl-11 pr-4 py-3 bg-white border border-gray-100 rounded-xl text-sm shadow-sm" placeholder="Contoh: Loket Pusat, Pool, Rest Area...">
-                </div>
-            </div>
-
-            <div>
                 <label class="block text-xs font-bold text-gray-600 uppercase mb-3">Kondisi / Status</label>
                 <div class="grid grid-cols-2 gap-3">
                     <label class="relative flex items-center justify-center p-3 rounded-xl border border-gray-100 bg-white cursor-pointer shadow-sm transition active:scale-95 has-[:checked]:bg-primary has-[:checked]:text-white has-[:checked]:border-primary group">
-                        <input type="radio" name="status" value="Di Perjalanan" required class="hidden" checked>
+                        <input type="radio" name="status" value="Persiapan" required class="hidden" checked>
                         <div class="text-center">
-                            <i class="fa-solid fa-bus-simple block mb-1"></i>
-                            <span class="text-[10px] font-bold">Lancar</span>
+                            <i class="fa-solid fa-clipboard-list block mb-1"></i>
+                            <span class="text-[10px] font-bold">Persiapan</span>
                         </div>
                     </label>
                     <label class="relative flex items-center justify-center p-3 rounded-xl border border-gray-100 bg-white cursor-pointer shadow-sm transition active:scale-95 has-[:checked]:bg-blue-500 has-[:checked]:text-white has-[:checked]:border-blue-500 group">
-                        <input type="radio" name="status" value="Istirahat" class="hidden">
+                        <input type="radio" name="status" value="Dalam Perjalanan" class="hidden">
                         <div class="text-center">
-                            <i class="fa-solid fa-mug-hot block mb-1"></i>
-                            <span class="text-[10px] font-bold">Istirahat</span>
+                            <i class="fa-solid fa-bus-simple block mb-1"></i>
+                            <span class="text-[10px] font-bold">Dalam Perjalanan</span>
+                        </div>
+                    </label>
+                    <label class="relative flex items-center justify-center p-3 rounded-xl border border-gray-100 bg-white cursor-pointer shadow-sm transition active:scale-95 has-[:checked]:bg-success has-[:checked]:text-white has-[:checked]:border-success group">
+                        <input type="radio" name="status" value="Sampai" class="hidden">
+                        <div class="text-center">
+                            <i class="fa-solid fa-flag-checkered block mb-1"></i>
+                            <span class="text-[10px] font-bold">Sampai</span>
                         </div>
                     </label>
                     <label class="relative flex items-center justify-center p-3 rounded-xl border border-gray-100 bg-white cursor-pointer shadow-sm transition active:scale-95 has-[:checked]:bg-danger has-[:checked]:text-white has-[:checked]:border-danger group">
@@ -58,13 +55,6 @@
                         <div class="text-center">
                             <i class="fa-solid fa-triangle-exclamation block mb-1"></i>
                             <span class="text-[10px] font-bold">Kendala</span>
-                        </div>
-                    </label>
-                    <label class="relative flex items-center justify-center p-3 rounded-xl border border-gray-100 bg-white cursor-pointer shadow-sm transition active:scale-95 has-[:checked]:bg-success has-[:checked]:text-white has-[:checked]:border-success group">
-                        <input type="radio" name="status" value="Tiba" class="hidden">
-                        <div class="text-center">
-                            <i class="fa-solid fa-flag-checkered block mb-1"></i>
-                            <span class="text-[10px] font-bold">Tiba</span>
                         </div>
                     </label>
                 </div>
@@ -91,7 +81,6 @@
                                 <span class="text-[10px] font-bold text-primary">{{ $up->status }}</span>
                                 <span class="text-[10px] text-gray-400">{{ $up->created_at->format('H:i') }} WIB</span>
                             </div>
-                            <p class="text-xs font-bold text-gray-800 mt-1">{{ $up->lokasi_sekarang }}</p>
                             @if($up->keterangan)
                                 <p class="text-[10px] text-gray-500 italic mt-1 leading-relaxed">"{{ $up->keterangan }}"</p>
                             @endif

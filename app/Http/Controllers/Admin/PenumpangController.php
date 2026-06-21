@@ -34,7 +34,7 @@ class PenumpangController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nik' => 'required|string|max:20|unique:penumpang,nik',
+            'nik' => 'required|digits:16|unique:penumpang,nik',
             'nama' => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'no_hp' => 'required|string|max:15',
@@ -62,7 +62,7 @@ class PenumpangController extends Controller
         $penumpang = Penumpang::findOrFail($id);
 
         $request->validate([
-            'nik' => 'required|string|max:20|unique:penumpang,nik,' . $id,
+            'nik' => 'required|digits:16|unique:penumpang,nik,' . $id,
             'nama' => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'no_hp' => 'required|string|max:15',

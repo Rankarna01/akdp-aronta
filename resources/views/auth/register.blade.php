@@ -65,7 +65,7 @@
                 <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">NIK (No. KTP)</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-regular fa-id-card text-gray-400"></i></div>
-                    <input type="number" name="nik" value="{{ old('nik') }}" required class="input-modern w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm transition-all focus:bg-white" placeholder="16 Digit NIK">
+                    <input type="text" inputmode="numeric" minlength="16" maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)" name="nik" value="{{ old('nik') }}" required class="input-modern w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm transition-all focus:bg-white" placeholder="16 Digit NIK">
                 </div>
             </div>
 

@@ -87,7 +87,7 @@
 
         </div>
 
-       <div class="p-4 px-6 bg-white border-t border-gray-50 flex gap-3 shrink-0 pb-6 rounded-b-3xl">
+       <div class="p-4 px-6 bg-white border-t border-gray-50 flex gap-3 shrink-0 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
             <a href="#" target="_blank" id="btn-download-tiket" class="flex-1 border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold py-3 rounded-xl text-xs transition active:scale-95 flex items-center justify-center gap-2 text-center">
                 <i class="fa-solid fa-download"></i> Download
             </a>

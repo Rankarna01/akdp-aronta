@@ -26,10 +26,9 @@ class MonitoringController extends Controller
         $query = MonitoringPerjalanan::with(['jadwal.rute', 'jadwal.armada']);
 
         if (!empty($search)) {
-            $query->where('lokasi_sekarang', 'LIKE', "%{$search}%")
-                  ->orWhereHas('jadwal.armada', function($q) use ($search) {
-                      $q->where('nama_bus', 'LIKE', "%{$search}%");
-                  });
+            $query->whereHas('jadwal.armada', function($q) use ($search) {
+                $q->where('nama_bus', 'LIKE', "%{$search}%");
+            });
         }
 
         // Urutkan dari update lokasi terbaru
@@ -41,17 +40,16 @@ class MonitoringController extends Controller
     {
         $request->validate([
             'jadwal_id' => 'required|exists:jadwal,id',
-            'lokasi_sekarang' => 'required|string|max:255',
-            'status' => 'required|in:Persiapan,Di Perjalanan,Istirahat,Kendala,Tiba',
-            'keterangan' => 'nullable|string',
+            'status' => 'required|in:Persiapan,Dalam Perjalanan,Kendala,Sampai',
+            'keterangan' => 'required_if:status,Kendala|nullable|string',
         ]);
 
         MonitoringPerjalanan::create($request->all());
 
-        // Otomatis ubah status jadwal utama jika bus sudah "Tiba"
-        if ($request->status == 'Tiba') {
+        // Otomatis ubah status jadwal utama jika bus sudah "Sampai"
+        if ($request->status == 'Sampai') {
             Jadwal::where('id', $request->jadwal_id)->update(['status' => 'Selesai']);
-        } elseif ($request->status == 'Di Perjalanan') {
+        } elseif ($request->status == 'Dalam Perjalanan') {
             Jadwal::where('id', $request->jadwal_id)->update(['status' => 'Berangkat']);
         }
 
@@ -73,9 +71,8 @@ class MonitoringController extends Controller
 
         $request->validate([
             'jadwal_id' => 'required|exists:jadwal,id',
-            'lokasi_sekarang' => 'required|string|max:255',
-            'status' => 'required|in:Persiapan,Di Perjalanan,Istirahat,Kendala,Tiba',
-            'keterangan' => 'nullable|string',
+            'status' => 'required|in:Persiapan,Dalam Perjalanan,Kendala,Sampai',
+            'keterangan' => 'required_if:status,Kendala|nullable|string',
         ]);
 
         $monitoring->update($request->all());

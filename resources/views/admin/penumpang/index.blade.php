@@ -63,7 +63,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">NIK (No. KTP)</label>
-                        <input type="number" id="nik" name="nik" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" placeholder="16 Digit Angka">
+                        <input type="text" inputmode="numeric" minlength="16" maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)" id="nik" name="nik" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" placeholder="16 Digit Angka" required>
                         <span class="text-xs text-danger mt-1 hidden error-field" id="err-nik"></span>
                     </div>
                     <div>

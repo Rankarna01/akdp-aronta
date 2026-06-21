@@ -61,7 +61,7 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Nomor Rekening / HP</label>
-                    <input type="text" id="nomor_rekening" name="nomor_rekening" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" placeholder="Contoh: 1234567890" required>
+                    <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" id="nomor_rekening" name="nomor_rekening" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" placeholder="Contoh: 1234567890" required>
                     <span class="text-xs text-danger mt-1 hidden error-field" id="err-nomor_rekening"></span>
                 </div>
 

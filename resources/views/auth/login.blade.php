@@ -45,21 +45,26 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fa-regular fa-envelope text-gray-400"></i>
                     </div>
-                    <input type="email" name="email" required class="input-modern w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm transition-all focus:bg-white" placeholder="admin@aronta.com">
+                    <input type="email" name="email" value="{{ old('email') }}" required class="input-modern w-full pl-10 pr-4 py-2.5 bg-gray-50 border {{ $errors->has('email') ? 'border-red-500' : 'border-gray-200' }} rounded-xl text-sm transition-all focus:bg-white" placeholder="nama@email.com">
                 </div>
+                @error('email')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-2">
                     <label class="block text-sm font-medium text-gray-700">Password</label>
-                    <a href="#" class="text-xs text-primary hover:underline font-medium">Lupa Password?</a>
                 </div>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fa-solid fa-lock text-gray-400"></i>
                     </div>
-                    <input type="password" name="password" required class="input-modern w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm transition-all focus:bg-white" placeholder="••••••••">
+                    <input type="password" name="password" required class="input-modern w-full pl-10 pr-4 py-2.5 bg-gray-50 border {{ $errors->has('password') ? 'border-red-500' : 'border-gray-200' }} rounded-xl text-sm transition-all focus:bg-white" placeholder="••••••••">
                 </div>
+                @error('password')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="flex items-center mb-6">

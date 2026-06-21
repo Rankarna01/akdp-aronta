@@ -26,13 +26,21 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user) {
+            return back()->withErrors([
+                'email' => 'Email belum terdaftar di sistem.',
+            ])->onlyInput('email');
+        }
+
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
             return $this->redirectBasedOnRole(Auth::user()->role);
         }
 
         return back()->withErrors([
-            'email' => 'Email atau password yang Anda masukkan salah.',
+            'password' => 'Password yang Anda masukkan salah.',
         ])->onlyInput('email');
     }
 
@@ -54,7 +62,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'nik' => 'required|string|max:20|unique:penumpang,nik',
+            'nik' => 'required|digits:16|unique:penumpang,nik',
             'no_hp' => 'required|string|max:15',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
         ]);

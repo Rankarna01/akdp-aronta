@@ -38,15 +38,13 @@ class StatusController extends Controller
     {
         $request->validate([
             'jadwal_id' => 'required|exists:jadwal,id',
-            'lokasi_sekarang' => 'required|string|max:255',
-            'status' => 'required|in:Persiapan,Di Perjalanan,Istirahat,Kendala,Tiba',
-            'keterangan' => 'nullable|string|max:500',
+            'status' => 'required|in:Persiapan,Dalam Perjalanan,Kendala,Sampai',
+            'keterangan' => 'required_if:status,Kendala|nullable|string|max:500',
         ]);
 
         // 1. Simpan ke tabel monitoring_perjalanan
         MonitoringPerjalanan::create([
             'jadwal_id' => $request->jadwal_id,
-            'lokasi_sekarang' => $request->lokasi_sekarang,
             'status' => $request->status,
             'keterangan' => $request->keterangan,
         ]);
@@ -54,9 +52,9 @@ class StatusController extends Controller
         // 2. Logika Sinkronisasi Status Jadwal Utama
         $jadwal = Jadwal::findOrFail($request->jadwal_id);
         
-        if ($request->status == 'Tiba') {
+        if ($request->status == 'Sampai') {
             $jadwal->update(['status' => 'Selesai']);
-        } elseif ($request->status == 'Di Perjalanan' && $jadwal->status == 'Menunggu') {
+        } elseif ($request->status == 'Dalam Perjalanan' && $jadwal->status == 'Menunggu') {
             $jadwal->update(['status' => 'Berangkat']);
         }
 

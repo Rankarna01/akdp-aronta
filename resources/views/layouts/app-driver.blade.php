@@ -40,19 +40,19 @@
     </style>
     @stack('css')
 </head>
-<body class="flex items-center justify-center min-h-screen">
+<body class="flex items-center justify-center min-h-[100dvh] bg-slate-200 sm:py-8">
 
     <div id="ajax-loader" class="fixed inset-0 flex items-center justify-center bg-slate-900/20 backdrop-blur-sm z-[9999]">
         <div class="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
     </div>
 
-    <div class="w-full max-w-md bg-background min-h-screen sm:min-h-[850px] sm:max-h-screen sm:rounded-[2.5rem] sm:shadow-2xl relative overflow-hidden flex flex-col app-container border-x-4 border-y-8 border-gray-900">
+    <div class="w-full max-w-md bg-background h-[100dvh] sm:h-[800px] sm:rounded-[2.5rem] sm:shadow-2xl relative overflow-hidden flex flex-col app-container sm:border-x-4 sm:border-y-8 sm:border-gray-900 mx-auto">
         
-        <main class="flex-1 overflow-y-auto pb-24 app-container relative">
+        <main class="flex-1 overflow-y-auto pb-6 app-container relative bg-[#f8fafc]">
             @yield('content')
         </main>
 
-        <nav class="absolute bottom-0 w-full bg-white border-t border-gray-100 rounded-t-3xl shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] px-6 py-4 flex justify-between items-center z-50">
+        <nav class="w-full bg-white border-t border-gray-100 sm:rounded-b-[2rem] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] px-6 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] flex justify-between items-center z-50 shrink-0">
             <a href="{{ route('driver.dashboard') }}" class="flex flex-col items-center gap-1 {{ request()->routeIs('driver.dashboard') ? 'text-primary' : 'text-gray-400 hover:text-gray-600' }} transition">
                 <i class="fa-solid fa-house text-xl"></i>
                 <span class="text-[10px] font-medium">Dashboard</span>

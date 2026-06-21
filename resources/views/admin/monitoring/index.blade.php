@@ -15,9 +15,6 @@
         </span>
         <input type="text" id="search-input" class="input-modern w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm" placeholder="Cari armada atau lokasi...">
     </div>
-    <button onclick="openCreateModal()" class="w-full sm:w-auto bg-primary hover:bg-blue-900 text-white text-sm font-medium px-4 py-2 rounded-xl shadow-lg shadow-primary/20 transition flex items-center justify-center gap-2">
-        <i class="fa-solid fa-location-dot"></i> Update Posisi
-    </button>
 </div>
 
 <div class="bg-surface rounded-xl shadow-halus border border-gray-100 overflow-hidden">
@@ -39,65 +36,7 @@
     <div id="pagination-container" class="px-6 py-4 flex items-center justify-between border-t border-gray-100 bg-gray-50/50"></div>
 </div>
 
-<div id="monitoring-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-fade-in custom-scrollbar overflow-y-auto">
-    <div class="bg-surface w-full max-w-lg rounded-2xl shadow-xl border border-gray-100 my-auto transform transition-all scale-95 duration-300" id="modal-card">
-        <div class="px-6 py-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between sticky top-0 rounded-t-2xl z-10">
-            <h3 id="modal-title" class="font-semibold text-gray-800 text-base">Update Posisi Armada</h3>
-            <button type="button" onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
-        </div>
-        
-        <form id="monitoring-form" onsubmit="saveForm(event)">
-            <input type="hidden" id="monitoring-id" name="id">
-            
-            <div class="p-6 space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Pilih Perjalanan (Jadwal Aktif)</label>
-                    <select id="jadwal_id" name="jadwal_id" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm">
-                        <option value="">-- Pilih Armada yang Sedang Beroperasi --</option>
-                        @foreach($jadwalAktif as $item)
-                            <option value="{{ $item->id }}">
-                                {{ $item->armada->nama_bus }} | {{ $item->rute->kota_asal }} - {{ $item->rute->kota_tujuan }} ({{ \Carbon\Carbon::parse($item->tanggal)->format('d M') }})
-                            </option>
-                        @endforeach
-                    </select>
-                    <span class="text-xs text-danger mt-1 hidden error-field" id="err-jadwal_id"></span>
-                </div>
 
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Lokasi Sekarang</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fa-solid fa-map-pin"></i></span>
-                        <input type="text" id="lokasi_sekarang" name="lokasi_sekarang" class="input-modern w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" placeholder="Contoh: RM. Siang Malam, Tebing Tinggi">
-                    </div>
-                    <span class="text-xs text-danger mt-1 hidden error-field" id="err-lokasi_sekarang"></span>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Kondisi / Status Perjalanan</label>
-                    <select id="status" name="status" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm">
-                        <option value="Persiapan">Persiapan (Pool)</option>
-                        <option value="Di Perjalanan">Di Perjalanan (Lancar)</option>
-                        <option value="Istirahat">Istirahat (Rest Area)</option>
-                        <option value="Kendala">Terkendala (Macet/Trouble)</option>
-                        <option value="Tiba">Tiba di Tujuan</option>
-                    </select>
-                    <span class="text-xs text-danger mt-1 hidden error-field" id="err-status"></span>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Keterangan Tambahan</label>
-                    <textarea id="keterangan" name="keterangan" rows="2" class="input-modern w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm" placeholder="Opsional (Misal: Estimasi telat 30 menit)"></textarea>
-                    <span class="text-xs text-danger mt-1 hidden error-field" id="err-keterangan"></span>
-                </div>
-            </div>
-
-            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-3 sticky bottom-0 rounded-b-2xl z-10">
-                <button type="button" onclick="closeModal()" class="px-4 py-2 text-sm font-medium text-secondary hover:bg-gray-100 rounded-xl transition">Batal</button>
-                <button type="submit" class="px-4 py-2 text-sm font-medium bg-primary hover:bg-blue-900 text-white rounded-xl shadow-md transition">Update Posisi</button>
-            </div>
-        </form>
-    </div>
-</div>
 @endsection
 
 @push('scripts')
@@ -135,9 +74,8 @@
                     response.data.forEach(function(item) {
                         let badgeColor = '';
                         if(item.status === 'Persiapan') badgeColor = 'bg-gray-100 text-gray-600';
-                        else if(item.status === 'Di Perjalanan') badgeColor = 'bg-primary/10 text-primary';
-                        else if(item.status === 'Istirahat') badgeColor = 'bg-blue-50 text-blue-600';
-                        else if(item.status === 'Tiba') badgeColor = 'bg-success/10 text-success';
+                        else if(item.status === 'Dalam Perjalanan') badgeColor = 'bg-primary/10 text-primary';
+                        else if(item.status === 'Sampai') badgeColor = 'bg-success/10 text-success';
                         else badgeColor = 'bg-danger/10 text-danger';
 
                         let ket = item.keterangan ? `<p class="text-[11px] text-gray-500 mt-1 italic">"${item.keterangan}"</p>` : '';
@@ -149,7 +87,6 @@
                                     <p class="text-xs font-medium text-secondary mt-1">${item.jadwal.rute.kota_asal} <i class="fa-solid fa-arrow-right mx-1 text-[10px]"></i> ${item.jadwal.rute.kota_tujuan}</p>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <p class="font-medium text-gray-800"><i class="fa-solid fa-location-dot text-danger mr-1"></i> ${item.lokasi_sekarang}</p>
                                     ${ket}
                                 </td>
                                 <td class="px-6 py-4 font-mono text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded">
@@ -159,7 +96,6 @@
                                     <span class="px-3 py-1 rounded-full text-[11px] font-bold ${badgeColor}">${item.status}</span>
                                 </td>
                                 <td class="px-6 py-4 text-center space-x-1">
-                                    <button onclick="openEditModal(${item.id})" class="text-primary hover:bg-primary/10 p-2 rounded-lg transition" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
                                     <button onclick="deleteMonitoring(${item.id})" class="text-danger hover:bg-danger/10 p-2 rounded-lg transition" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
                                 </td>
                             </tr>
@@ -191,73 +127,7 @@
         $('#pagination-container').html(paginationHtml);
     }
 
-    function openCreateModal() {
-        $('#monitoring-form')[0].reset();
-        $('#monitoring-id').val('');
-        $('.error-field').addClass('hidden').html('');
-        $('#modal-title').text('Update Posisi Armada');
-        
-        $('#monitoring-modal').removeClass('hidden').addClass('flex');
-        setTimeout(() => { $('#modal-card').removeClass('scale-95').addClass('scale-100'); }, 50);
-    }
 
-    function openEditModal(id) {
-        $('.error-field').addClass('hidden').html('');
-        $.ajax({
-            url: `/admin/monitoring/${id}/edit`,
-            type: "GET",
-            success: function(data) {
-                $('#monitoring-id').val(data.id);
-                // Karena jadwal dropdown hanya berisi yg 'Aktif', jika data lama sudah selesai mungkin tidak muncul.
-                // Kita force select jika opsinya masih ada.
-                $('#jadwal_id').val(data.jadwal_id); 
-                $('#lokasi_sekarang').val(data.lokasi_sekarang);
-                $('#status').val(data.status);
-                $('#keterangan').val(data.keterangan);
-                
-                $('#modal-title').text('Edit Catatan Monitoring');
-                
-                $('#monitoring-modal').removeClass('hidden').addClass('flex');
-                setTimeout(() => { $('#modal-card').removeClass('scale-95').addClass('scale-100'); }, 50);
-            }
-        });
-    }
-
-    function closeModal() {
-        $('#modal-card').removeClass('scale-100').addClass('scale-95');
-        setTimeout(() => { $('#monitoring-modal').removeClass('flex').addClass('hidden'); }, 150);
-    }
-
-    function saveForm(e) {
-        e.preventDefault();
-        $('.error-field').addClass('hidden').html('');
-        
-        let id = $('#monitoring-id').val();
-        let url = id ? `/admin/monitoring/${id}` : "{{ route('admin.monitoring.store') }}";
-        let type = id ? "PUT" : "POST";
-        let formData = $('#monitoring-form').serialize();
-
-        $.ajax({
-            url: url,
-            type: type,
-            data: formData,
-            success: function(response) {
-                if (response.success) {
-                    closeModal();
-                    Swal.fire({ icon: 'success', title: 'Berhasil!', text: response.message, timer: 2000, showConfirmButton: false });
-                    fetchMonitoring(currentPage, currentSearch);
-                }
-            },
-            error: function(jqxhr) {
-                if (jqxhr.status === 422) {
-                    let errors = jqxhr.responseJSON.errors;
-                    $.each(errors, function(key, val) {
-                        $(`#err-${key}`).removeClass('hidden').text(val[0]);
-                    });
-                }
-            }
-        });
-    }
 
     function deleteMonitoring(id) {
         Swal.fire({
