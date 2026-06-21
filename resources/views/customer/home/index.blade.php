@@ -43,7 +43,7 @@
                     <div class="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center text-primary text-3xl mb-2">
                         <i class="fa-solid fa-bus"></i>
                     </div>
-                    <a href="#" class="w-full bg-primary hover:bg-blue-900 text-white text-center text-[10px] font-medium py-1.5 rounded-lg transition">Pesan</a>
+                    <a href="{{ route('customer.tiket.pilih-kursi', $item->id) }}" class="w-full bg-primary hover:bg-blue-900 text-white text-center text-[10px] font-medium py-1.5 rounded-lg transition">Pesan</a>
                 </div>
             </div>
         @empty
