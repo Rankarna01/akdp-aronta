@@ -72,9 +72,16 @@
                 <label for="remember" class="ml-2 text-sm text-gray-600 cursor-pointer">Ingat Saya</label>
             </div>
 
-            <button type="submit" class="w-full bg-primary hover:bg-blue-900 text-white font-medium py-2.5 rounded-xl transition-colors shadow-lg shadow-primary/30 flex justify-center items-center gap-2">
+            <button type="submit" class="w-full bg-primary hover:bg-blue-900 text-white font-medium py-2.5 rounded-xl transition-colors shadow-lg shadow-primary/30 flex justify-center items-center gap-2 mb-4">
                 Masuk ke Sistem <i class="fa-solid fa-arrow-right-to-bracket"></i>
             </button>
+
+            <div class="text-center mt-6 border-t border-gray-100 pt-4">
+                <p class="text-sm text-gray-500">
+                    Belum punya akun? 
+                    <a href="{{ route('register') }}" class="text-primary font-bold hover:underline">Daftar sekarang</a>
+                </p>
+            </div>
         </form>
     </div>
 </body>
