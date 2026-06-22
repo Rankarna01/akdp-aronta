@@ -45,47 +45,88 @@
                 $rowCount = 1;
             @endphp
 
-            {{-- BARIS 1: [1] [2] | [Kosong] [Supir] --}}
-            @if($total > 0) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
-            @if($total > $i) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
-            
-            {{-- Garis Lorong Vertikal --}}
-            <div class="flex items-center justify-center"><div class="w-[2px] h-full bg-gray-200 rounded-full opacity-60"></div></div>
-            
-            {{-- Ruang Kosong (Pintu) --}}
-            <div></div>
-            
-            {{-- Kotak Supir --}}
-            <div class="aspect-square w-full rounded-xl border-2 border-gray-300 bg-gray-100 text-gray-500 flex items-center justify-center text-[8px] uppercase tracking-wider font-bold shadow-sm">
-                Supir
-            </div>
+            @if($total == 15)
+                {{-- LAYOUT 15 KURSI (EXECUTIVE) --}}
+                {{-- BARIS 1: [1] [2] [Lorong] [Kosong] [Supir] --}}
+                @include('components.seat-block', ['kursi' => $semuaKursi[0], 'kursiTerisi' => $kursiTerisi])
+                @include('components.seat-block', ['kursi' => $semuaKursi[1], 'kursiTerisi' => $kursiTerisi])
+                <div class="flex items-center justify-center"><div class="w-[2px] h-full bg-gray-200 rounded-full opacity-60"></div></div>
+                <div></div>
+                <div class="aspect-square w-full rounded-xl border-2 border-gray-300 bg-gray-100 text-gray-500 flex items-center justify-center text-[8px] uppercase tracking-wider font-bold shadow-sm">Supir</div>
 
-            {{-- BARIS 2 - 5: Normal 2-2 --}}
-            @while($i < $total && $rowCount <= 4) {{-- Maksimal 4 baris setelah baris pertama --}}
-                {{-- Kiri 2 --}}
-                @if($i < $total) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
-                @if($i < $total) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
+                {{-- BARIS 2: [Kosong] [3] [Kosong] [4] [5] --}}
+                <div></div>
+                @include('components.seat-block', ['kursi' => $semuaKursi[2], 'kursiTerisi' => $kursiTerisi])
+                <div></div>
+                @include('components.seat-block', ['kursi' => $semuaKursi[3], 'kursiTerisi' => $kursiTerisi])
+                @include('components.seat-block', ['kursi' => $semuaKursi[4], 'kursiTerisi' => $kursiTerisi])
+
+                {{-- BARIS 3: [6] [Kosong] [Lorong] [7] [8] --}}
+                @include('components.seat-block', ['kursi' => $semuaKursi[5], 'kursiTerisi' => $kursiTerisi])
+                <div></div>
+                <div class="flex items-center justify-center"><div class="w-[2px] h-full bg-gray-200 rounded-full opacity-60"></div></div>
+                @include('components.seat-block', ['kursi' => $semuaKursi[6], 'kursiTerisi' => $kursiTerisi])
+                @include('components.seat-block', ['kursi' => $semuaKursi[7], 'kursiTerisi' => $kursiTerisi])
+
+                {{-- BARIS 4: [9] [Kosong] [Lorong] [10] [11] --}}
+                @include('components.seat-block', ['kursi' => $semuaKursi[8], 'kursiTerisi' => $kursiTerisi])
+                <div></div>
+                <div class="flex items-center justify-center"><div class="w-[2px] h-full bg-gray-200 rounded-full opacity-60"></div></div>
+                @include('components.seat-block', ['kursi' => $semuaKursi[9], 'kursiTerisi' => $kursiTerisi])
+                @include('components.seat-block', ['kursi' => $semuaKursi[10], 'kursiTerisi' => $kursiTerisi])
+
+                {{-- BARIS 5: [12] [13] [14] [15] --}}
+                <div class="col-span-5 flex justify-center gap-2.5 mt-2">
+                    <div class="flex-1 w-full max-w-[55px]">@include('components.seat-block', ['kursi' => $semuaKursi[11], 'kursiTerisi' => $kursiTerisi])</div>
+                    <div class="flex-1 w-full max-w-[55px]">@include('components.seat-block', ['kursi' => $semuaKursi[12], 'kursiTerisi' => $kursiTerisi])</div>
+                    <div class="flex-1 w-full max-w-[55px]">@include('components.seat-block', ['kursi' => $semuaKursi[13], 'kursiTerisi' => $kursiTerisi])</div>
+                    <div class="flex-1 w-full max-w-[55px]">@include('components.seat-block', ['kursi' => $semuaKursi[14], 'kursiTerisi' => $kursiTerisi])</div>
+                </div>
+
+            @else
+                {{-- LAYOUT NORMAL (25 KURSI ATAU LAINNYA) --}}
+                {{-- BARIS 1: [1] [2] | [Kosong] [Supir] --}}
+                @if($total > 0) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
+                @if($total > $i) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
                 
                 {{-- Garis Lorong Vertikal --}}
                 <div class="flex items-center justify-center"><div class="w-[2px] h-full bg-gray-200 rounded-full opacity-60"></div></div>
                 
-                {{-- Kanan 2 --}}
-                @if($i < $total) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
-                @if($i < $total) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
+                {{-- Ruang Kosong (Pintu) --}}
+                <div></div>
                 
-                @php $rowCount++; @endphp
-            @endwhile
-
-            {{-- BARIS 6: SISANYA DITUMPUK (Baris Paling Belakang) --}}
-            @if($i < $total)
-                <div class="col-span-5 flex justify-center gap-2.5 mt-2">
-                    @while($i < $total)
-                        <div class="flex-1 w-full max-w-[55px]">
-                            @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi])
-                        </div>
-                        @php $i++; @endphp
-                    @endwhile
+                {{-- Kotak Supir --}}
+                <div class="aspect-square w-full rounded-xl border-2 border-gray-300 bg-gray-100 text-gray-500 flex items-center justify-center text-[8px] uppercase tracking-wider font-bold shadow-sm">
+                    Supir
                 </div>
+
+                {{-- BARIS 2 - 5: Normal 2-2 --}}
+                @while($i < $total && $rowCount <= 4) {{-- Maksimal 4 baris setelah baris pertama --}}
+                    {{-- Kiri 2 --}}
+                    @if($i < $total) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
+                    @if($i < $total) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
+                    
+                    {{-- Garis Lorong Vertikal --}}
+                    <div class="flex items-center justify-center"><div class="w-[2px] h-full bg-gray-200 rounded-full opacity-60"></div></div>
+                    
+                    {{-- Kanan 2 --}}
+                    @if($i < $total) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
+                    @if($i < $total) @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi]) @php $i++; @endphp @else <div></div> @endif
+                    
+                    @php $rowCount++; @endphp
+                @endwhile
+
+                {{-- BARIS 6: SISANYA DITUMPUK (Baris Paling Belakang) --}}
+                @if($i < $total)
+                    <div class="col-span-5 flex justify-center gap-2.5 mt-2">
+                        @while($i < $total)
+                            <div class="flex-1 w-full max-w-[55px]">
+                                @include('components.seat-block', ['kursi' => $semuaKursi[$i], 'kursiTerisi' => $kursiTerisi])
+                            </div>
+                            @php $i++; @endphp
+                        @endwhile
+                    </div>
+                @endif
             @endif
         </div>
     </div>

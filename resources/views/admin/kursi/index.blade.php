@@ -17,7 +17,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         @forelse($armada as $bus)
-            <div onclick="openBusDetail({{ $bus->id }}, '{{ $bus->nama_bus }}', '{{ $bus->plat_nomor }}')" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-primary hover:shadow-md cursor-pointer transition-all group relative overflow-hidden">
+            <div onclick="openBusDetail({{ $bus->id }}, '{{ $bus->nama_bus }}', '{{ $bus->plat_nomor }}', '{{ $bus->tipe_bus }}')" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-primary hover:shadow-md cursor-pointer transition-all group relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-1.5 h-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 
                 <div class="w-14 h-14 bg-blue-50 text-primary rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
@@ -190,6 +190,7 @@
     let currentSearch = '';
     let currentArmadaId = null;
     let currentArmadaName = '';
+    let currentArmadaTipe = '';
 
     $(document).ready(function() {
         // Search listener khusus tabel
@@ -201,9 +202,10 @@
     });
 
     /* --- FUNGSI NAVIGASI VIEW --- */
-    function openBusDetail(armadaId, namaBus, platNomor) {
+    function openBusDetail(armadaId, namaBus, platNomor, tipeBus) {
         currentArmadaId = armadaId;
         currentArmadaName = namaBus;
+        currentArmadaTipe = tipeBus;
 
         $('#selected-bus-name').text(namaBus);
         $('#selected-bus-plat').text(platNomor);
@@ -281,6 +283,13 @@
         // Otomatis isi data form berdasarkan bus yang sedang dibuka
         $('#gen_armada_id').val(currentArmadaId);
         $('#gen_bus_name').text(currentArmadaName);
+
+        // Otomatis tentukan jumlah kursi default berdasarkan tipe bus
+        if (currentArmadaTipe === 'Executive') {
+            $('input[name="jumlah_kursi"]').val(15);
+        } else {
+            $('input[name="jumlah_kursi"]').val(25);
+        }
 
         $('#generate-modal').removeClass('hidden').addClass('flex');
         setTimeout(() => { $('#generate-card').removeClass('scale-95').addClass('scale-100'); }, 50);
@@ -364,44 +373,68 @@
                 let total = seats.length;
                 let i = 0;
 
-                // --- BARIS 1: [1] [2] [Lorong] [Kosong] [Supir] ---
-                if (total > 0) { html += drawSeatBlock(seats[i]); i++; } else { html += '<div></div>'; }
-                if (total > i) { html += drawSeatBlock(seats[i]); i++; } else { html += '<div></div>'; }
-                
-                html += drawLorong(); // Lorong Tengah
-                html += '<div></div>'; // Kosong (Pintu)
-                html += `<div class="aspect-square flex flex-col items-center justify-center rounded-xl border-[3px] border-gray-300 bg-gray-100 text-gray-500 font-bold text-[8px] shadow-sm"><i class="fa-solid fa-steering-wheel text-xl mb-1"></i>Supir</div>`;
-
-                // --- BARIS 2 - 5 (Maksimal 4 baris normal) ---
-                let rowCount = 2;
-                while (i < total && rowCount <= 5) {
-                    // Kiri 2
-                    html += drawSeatBlock(seats[i]); i++;
-                    if (i < total) { html += drawSeatBlock(seats[i]); i++; } else { html += '<div></div>'; }
+                if (total === 15) {
+                    // --- LAYOUT KHUSUS 15 KURSI (EXECUTIVE) ---
+                    // Baris 1: [1] [2] [Lorong] [Kosong] [Supir]
+                    html += drawSeatBlock(seats[0]) + drawSeatBlock(seats[1]) + drawLorong() + '<div></div>' + drawSupir();
+                    // Baris 2: [Kosong] [3] [Kosong] [4] [5]
+                    html += '<div></div>' + drawSeatBlock(seats[2]) + '<div></div>' + drawSeatBlock(seats[3]) + drawSeatBlock(seats[4]);
+                    // Baris 3: [6] [Kosong] [Lorong] [7] [8]
+                    html += drawSeatBlock(seats[5]) + '<div></div>' + drawLorong() + drawSeatBlock(seats[6]) + drawSeatBlock(seats[7]);
+                    // Baris 4: [9] [Kosong] [Lorong] [10] [11]
+                    html += drawSeatBlock(seats[8]) + '<div></div>' + drawLorong() + drawSeatBlock(seats[9]) + drawSeatBlock(seats[10]);
+                    // Baris 5: [12] [13] [14] [15] (Flexbox membentang)
+                    html += `<div class="col-span-5 flex justify-between items-center gap-2 mt-1">`;
+                    html += `<div class="flex-1 w-full">` + drawSeatBlock(seats[11]) + `</div>`;
+                    html += `<div class="flex-1 w-full">` + drawSeatBlock(seats[12]) + `</div>`;
+                    html += `<div class="flex-1 w-full">` + drawSeatBlock(seats[13]) + `</div>`;
+                    html += `<div class="flex-1 w-full">` + drawSeatBlock(seats[14]) + `</div>`;
+                    html += `</div>`;
+                } else {
+                    // --- LAYOUT NORMAL (25 KURSI ATAU LAINNYA) ---
+                    // --- BARIS 1: [1] [2] [Lorong] [Kosong] [Supir] ---
+                    if (total > 0) { html += drawSeatBlock(seats[i]); i++; } else { html += '<div></div>'; }
+                    if (total > i) { html += drawSeatBlock(seats[i]); i++; } else { html += '<div></div>'; }
                     
                     html += drawLorong(); // Lorong Tengah
-                    
-                    // Kanan 2
-                    if (i < total) { html += drawSeatBlock(seats[i]); i++; } else { html += '<div></div>'; }
-                    if (i < total) { html += drawSeatBlock(seats[i]); i++; } else { html += '<div></div>'; }
-                    
-                    rowCount++;
-                }
+                    html += '<div></div>'; // Kosong (Pintu)
+                    html += drawSupir();
 
-                // --- BARIS 6: SISANYA DITUMPUK (Menggunakan Flexbox) ---
-                if (i < total) {
-                    html += `<div class="col-span-5 flex justify-between items-center gap-2 mt-1">`;
-                    while(i < total) {
-                        html += `<div class="flex-1 w-full">` + drawSeatBlock(seats[i]) + `</div>`;
-                        i++;
+                    // --- BARIS 2 - 5 (Maksimal 4 baris normal) ---
+                    let rowCount = 2;
+                    while (i < total && rowCount <= 5) {
+                        // Kiri 2
+                        html += drawSeatBlock(seats[i]); i++;
+                        if (i < total) { html += drawSeatBlock(seats[i]); i++; } else { html += '<div></div>'; }
+                        
+                        html += drawLorong(); // Lorong Tengah
+                        
+                        // Kanan 2
+                        if (i < total) { html += drawSeatBlock(seats[i]); i++; } else { html += '<div></div>'; }
+                        if (i < total) { html += drawSeatBlock(seats[i]); i++; } else { html += '<div></div>'; }
+                        
+                        rowCount++;
                     }
-                    html += `</div>`;
+
+                    // --- BARIS 6: SISANYA DITUMPUK (Menggunakan Flexbox) ---
+                    if (i < total) {
+                        html += `<div class="col-span-5 flex justify-between items-center gap-2 mt-1">`;
+                        while(i < total) {
+                            html += `<div class="flex-1 w-full">` + drawSeatBlock(seats[i]) + `</div>`;
+                            i++;
+                        }
+                        html += `</div>`;
+                    }
                 }
 
                 html += '</div>';
                 $('#seat-grid-container').html(html);
             }
         });
+    }
+
+    function drawSupir() {
+        return `<div class="aspect-square flex flex-col items-center justify-center rounded-xl border-[3px] border-gray-300 bg-gray-100 text-gray-500 font-bold text-[8px] shadow-sm"><i class="fa-solid fa-steering-wheel text-xl mb-1"></i>Supir</div>`;
     }
 
     function drawLorong() {

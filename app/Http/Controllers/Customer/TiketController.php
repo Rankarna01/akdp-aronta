@@ -57,6 +57,7 @@ class TiketController extends Controller
 
         $semuaKursi = Kursi::where('armada_id', $jadwal->armada_id)
                            ->where('status', 'Aktif')
+                           ->orderByRaw('CAST(nomor_kursi AS UNSIGNED) ASC')
                            ->get();
 
         $kursiTerisi = Tiket::where('jadwal_id', $jadwal_id)
