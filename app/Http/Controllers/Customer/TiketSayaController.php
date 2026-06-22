@@ -23,7 +23,7 @@ class TiketSayaController extends Controller
         // Cari tiket berdasarkan user yang login melalui relasi nama/nik penumpang jika diperlukan,
         // namun idealnya tabel tiket dihubungkan langsung via user_id atau dicari yang memesan.
         // Di sini kita tarik berdasarkan tiket yang data nama pemesannya sesuai nama user atau kriteria pemesanan customer.
-        $query = Tiket::with(['jadwal.rute', 'jadwal.armada', 'kursi', 'penumpang']);
+        $query = Tiket::with(['jadwal.rute', 'jadwal.armada', 'kursi', 'penumpang'])->where('user_id', Auth::id());
 
         // Filter data berdasarkan Tab Status sesuai Mockup
         if ($status === 'Aktif') {
@@ -105,10 +105,11 @@ class TiketSayaController extends Controller
         return response()->json(['html' => $htmlContent]);
     }
 
-    // Mengambil data detail spesifik tiket untuk dimasukkan ke Modal QR Code (Screen 10)
     public function show($id)
     {
-        $tiket = Tiket::with(['jadwal.rute', 'jadwal.armada', 'kursi', 'penumpang'])->findOrFail($id);
+        $tiket = Tiket::with(['jadwal.rute', 'jadwal.armada', 'kursi', 'penumpang'])
+                      ->where('user_id', Auth::id())
+                      ->findOrFail($id);
         
         $tiket->tanggal_indo = \Carbon\Carbon::parse($tiket->jadwal->tanggal)->translatedFormat('l, d F Y');
         $tiket->jam_indo = substr($tiket->jadwal->waktu_berangkat, 0, 5) . ' WIB';
@@ -119,7 +120,9 @@ class TiketSayaController extends Controller
 
     public function cetak($id)
     {
-        $tiket = Tiket::with(['jadwal.rute', 'jadwal.armada', 'kursi', 'penumpang'])->findOrFail($id);
+        $tiket = Tiket::with(['jadwal.rute', 'jadwal.armada', 'kursi', 'penumpang'])
+                      ->where('user_id', Auth::id())
+                      ->findOrFail($id);
         
         // Pastikan hanya tiket milik customer (atau nama yang sesuai) yang bisa dicetak,
         // namun untuk simulasi ini kita langsung lemparkan datanya.

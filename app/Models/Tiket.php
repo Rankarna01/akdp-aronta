@@ -13,6 +13,7 @@ class Tiket extends Model
 
     protected $fillable = [
         'kode_tiket',
+        'user_id',
         'jadwal_id',
         'penumpang_id',
         'kursi_id',

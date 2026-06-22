@@ -84,6 +84,7 @@ class CheckoutController extends Controller
             // 5. Buat Tiket (Simpan dengan Catatan Titik)
             $tiket = Tiket::create([
                 'kode_tiket' => $kodeTiket,
+                'user_id' => Auth::id(),
                 'jadwal_id' => $jadwal->id,
                 'penumpang_id' => $penumpang->id,
                 'kursi_id' => $request->kursi_id,

@@ -45,15 +45,15 @@
 </div>
 
 <div id="armada-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-fade-in">
-    <div class="bg-surface w-full max-w-lg rounded-2xl shadow-xl border border-gray-100 overflow-hidden transform transition-all scale-95 duration-300" id="modal-card">
-        <div class="px-6 py-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+    <div class="bg-surface w-full max-w-lg max-h-[95vh] flex flex-col rounded-2xl shadow-xl border border-gray-100 overflow-hidden transform transition-all scale-95 duration-300" id="modal-card">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between shrink-0">
             <h3 id="modal-title" class="font-semibold text-gray-800 text-base">Tambah Data Armada</h3>
-            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <button type="button" onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
         
-        <form id="armada-form" onsubmit="saveForm(event)" enctype="multipart/form-data">
+        <form id="armada-form" onsubmit="saveForm(event)" enctype="multipart/form-data" class="flex flex-col overflow-hidden">
             <input type="hidden" id="armada-id" name="id">
-            <div class="p-6 space-y-4">
+            <div class="p-6 space-y-4 overflow-y-auto custom-scrollbar">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Nama Bus / Seri</label>
@@ -112,7 +112,7 @@
                 </div>
             </div>
 
-            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-3">
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-3 shrink-0">
                 <button type="button" onclick="closeModal()" class="px-4 py-2 text-sm font-medium text-secondary hover:bg-gray-100 rounded-xl transition">Batal</button>
                 <button type="submit" class="px-4 py-2 text-sm font-medium bg-primary hover:bg-blue-900 text-white rounded-xl shadow-md transition">Simpan Data</button>
             </div>

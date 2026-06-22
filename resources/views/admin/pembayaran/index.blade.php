@@ -10,7 +10,7 @@
 @section('content')
 <div class="bg-surface rounded-xl p-5 shadow-halus border border-gray-100 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
     
-    <div class="flex bg-gray-50 p-1 rounded-xl border border-gray-200 w-full sm:w-auto overflow-x-auto">
+    <div class="flex bg-gray-50 p-1 rounded-xl border border-gray-200 w-full sm:w-auto overflow-x-auto custom-scrollbar shrink-0">
         <button onclick="filterStatus('Semua')" id="tab-Semua" class="tab-btn px-4 py-2 text-xs font-bold rounded-lg transition-all bg-white text-primary shadow-sm whitespace-nowrap">Semua</button>
         <button onclick="filterStatus('Pending')" id="tab-Pending" class="tab-btn px-4 py-2 text-xs font-bold text-gray-500 hover:text-gray-700 rounded-lg transition-all whitespace-nowrap">
             Menunggu <span class="bg-warning text-white text-[9px] px-1.5 py-0.5 rounded-full ml-1">!</span>
@@ -27,9 +27,9 @@
     </div>
 </div>
 
-<div class="bg-surface rounded-xl shadow-halus border border-gray-100 overflow-hidden">
-    <div class="overflow-x-auto w-full">
-        <table class="w-full text-left border-collapse">
+<div class="bg-surface rounded-xl shadow-halus border border-gray-100 overflow-hidden w-full">
+    <div class="overflow-x-auto w-full custom-scrollbar">
+        <table class="w-full text-left border-collapse whitespace-nowrap">
             <thead>
                 <tr class="bg-gray-50 border-b border-gray-100 text-secondary text-xs uppercase font-semibold tracking-wider">
                     <th class="px-6 py-4">Kode Tiket / Rute</th>
@@ -47,17 +47,17 @@
 </div>
 
 <div id="image-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4 animate-fade-in">
-    <div class="bg-surface w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden transform transition-all scale-95 duration-300 relative" id="image-card">
-        <button onclick="closeImageModal()" class="absolute top-4 right-4 w-8 h-8 bg-black/50 text-white rounded-full hover:bg-black transition flex items-center justify-center z-10">
+    <div class="bg-surface w-full max-w-lg max-h-[95vh] flex flex-col rounded-2xl shadow-2xl overflow-hidden transform transition-all scale-95 duration-300 relative" id="image-card">
+        <button onclick="closeImageModal()" class="absolute top-4 right-4 w-8 h-8 bg-black/50 text-white rounded-full hover:bg-black transition flex items-center justify-center z-10 shrink-0">
             <i class="fa-solid fa-xmark"></i>
         </button>
 
-        <div class="p-6 text-center border-b border-gray-100 bg-gray-50">
+        <div class="p-6 text-center border-b border-gray-100 bg-gray-50 shrink-0">
             <h3 class="font-bold text-gray-800 text-base">Bukti Transfer</h3>
             <p id="modal-kode-tiket" class="text-xs font-mono font-bold text-primary mt-1"></p>
         </div>
         
-        <div class="bg-gray-200 w-full h-[60vh] flex items-center justify-center overflow-auto p-4 custom-scrollbar">
+        <div class="bg-gray-200 w-full flex-1 flex items-center justify-center overflow-auto p-4 custom-scrollbar">
             <img id="modal-img-preview" src="" alt="Bukti Pembayaran" class="max-w-full h-auto shadow-sm rounded border border-gray-300">
         </div>
 
