@@ -59,6 +59,19 @@ Route::get('/', function () {
 // =================================================================
 // 1. ROUTE AUTENTIKASI (LOGIN & REGISTER)
 // =================================================================
+Route::get('/dashboard-redirect', function () {
+    if (Auth::check()) {
+        $role = Auth::user()->role;
+        return match ($role) {
+            'super_admin' => redirect()->route('admin.dashboard'),
+            'driver'      => redirect()->route('driver.dashboard'),
+            'customer'    => redirect()->route('customer.home'),
+            default       => redirect()->route('landing'),
+        };
+    }
+    return redirect()->route('login');
+})->name('dashboard.redirect');
+
 Route::middleware('guest')->group(function () {
     // Login
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');

@@ -44,7 +44,7 @@
 
                 <div class="hidden md:flex items-center space-x-4">
                     @auth
-                        <a href="{{ route('login') }}" class="text-sm font-bold text-primary hover:text-blue-900 transition border border-primary/20 bg-primary/5 px-5 py-2.5 rounded-xl">Masuk Dashboard</a>
+                        <a href="{{ route('dashboard.redirect') }}" class="text-sm font-bold text-primary hover:text-blue-900 transition border border-primary/20 bg-primary/5 px-5 py-2.5 rounded-xl">Masuk Dashboard</a>
                     @else
                         <a href="{{ route('login') }}" class="text-sm font-bold text-secondary hover:text-primary transition">Masuk</a>
                         <a href="{{ route('register') }}" class="text-sm font-bold bg-primary text-white px-6 py-2.5 rounded-xl shadow-lg shadow-primary/30 hover:bg-blue-900 transition active:scale-95">Daftar Akun</a>
@@ -68,7 +68,7 @@
                 <a href="#tentang" class="block px-3 py-3 rounded-xl text-base font-medium text-gray-700 hover:bg-gray-50">Tentang Kami</a>
                 <div class="h-px w-full bg-gray-100 my-4"></div>
                 @auth
-                    <a href="{{ route('login') }}" class="block text-center px-3 py-3 rounded-xl text-base font-bold bg-primary text-white">Buka Dashboard</a>
+                    <a href="{{ route('dashboard.redirect') }}" class="block text-center px-3 py-3 rounded-xl text-base font-bold bg-primary text-white">Buka Dashboard</a>
                 @else
                     <a href="{{ route('login') }}" class="block text-center px-3 py-3 rounded-xl text-base font-bold border border-gray-200 text-gray-700 mb-2">Masuk</a>
                     <a href="{{ route('register') }}" class="block text-center px-3 py-3 rounded-xl text-base font-bold bg-primary text-white shadow-md">Daftar Akun</a>
