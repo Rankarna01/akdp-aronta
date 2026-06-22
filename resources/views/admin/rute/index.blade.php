@@ -26,6 +26,7 @@
             <thead>
                 <tr class="bg-gray-50 border-b border-gray-100 text-secondary text-xs uppercase font-semibold tracking-wider">
                     <th class="px-6 py-4">Rute Perjalanan (Asal - Tujuan)</th>
+                    <th class="px-6 py-4">Kelas</th>
                     <th class="px-6 py-4">Harga Dasar</th>
                     <th class="px-6 py-4 text-center">Status</th>
                     <th class="px-6 py-4 text-center">Aksi</th>
@@ -62,14 +63,23 @@
                     </div>
                 </div>
 
-
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Tipe Kelas Bus</label>
+                        <select id="tipe_bus" name="tipe_bus" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm">
+                            <option value="Economy">Economy</option>
+                            <option value="Executive">Executive</option>
+                        </select>
+                        <span class="text-xs text-danger mt-1 hidden error-field" id="err-tipe_bus"></span>
+                    </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Harga Dasar (Rp)</label>
                         <input type="number" id="harga_dasar" name="harga_dasar" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" placeholder="Contoh: 250000">
                         <span class="text-xs text-danger mt-1 hidden error-field" id="err-harga_dasar"></span>
                     </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Status</label>
                         <select id="status" name="status" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm">
@@ -136,6 +146,9 @@
                                         </div>
                                     </div>
                                 </td>
+                                <td class="px-6 py-4 font-medium text-gray-600">
+                                    ${item.tipe_bus}
+                                </td>
                                 <td class="px-6 py-4 font-semibold text-primary">
                                     ${formatRupiah(item.harga_dasar)}
                                 </td>
@@ -194,6 +207,7 @@
                 $('#rute-id').val(data.id);
                 $('#kota_asal').val(data.kota_asal);
                 $('#kota_tujuan').val(data.kota_tujuan);
+                $('#tipe_bus').val(data.tipe_bus);
                 $('#harga_dasar').val(data.harga_dasar);
                 $('#status').val(data.status);
                 

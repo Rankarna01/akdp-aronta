@@ -57,6 +57,13 @@ class JadwalController extends Controller
         $jadwalWaktu = \Carbon\Carbon::parse($request->tanggal . ' ' . $request->waktu_berangkat, 'Asia/Jakarta');
         $now = \Carbon\Carbon::now('Asia/Jakarta');
 
+        if ($request->tanggal != $now->toDateString()) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => ['tanggal' => ['Jadwal keberangkatan hanya dapat dibuat untuk hari ini.']]
+            ], 422);
+        }
+
         if ($jadwalWaktu->isPast()) {
             return response()->json([
                 'message' => 'The given data was invalid.',
@@ -64,33 +71,27 @@ class JadwalController extends Controller
             ], 422);
         }
 
-        // Cek bentrok Armada (jarak kurang dari 8 jam)
+        // Cek bentrok Armada (Tidak bisa dijadwalkan jika masih ada perjalanan aktif)
         $conflictArmada = Jadwal::where('armada_id', $request->armada_id)
-            ->where('tanggal', $request->tanggal)
-            ->get()
-            ->filter(function($j) use ($jadwalWaktu) {
-                return \Carbon\Carbon::parse($j->tanggal . ' ' . $j->waktu_berangkat, 'Asia/Jakarta')->diffInHours($jadwalWaktu) < 8;
-            })->count() > 0;
+            ->whereIn('status', ['Menunggu', 'Berangkat'])
+            ->exists();
 
         if ($conflictArmada) {
             return response()->json([
                 'message' => 'The given data was invalid.',
-                'errors' => ['armada_id' => ['Armada ini sudah memiliki jadwal yang berdekatan di tanggal yang sama (bentrok).']]
+                'errors' => ['armada_id' => ['Armada ini sedang dalam perjalanan atau menunggu keberangkatan. Harap tunggu sampai statusnya Selesai.']]
             ], 422);
         }
 
-        // Cek bentrok Supir (jarak kurang dari 8 jam)
+        // Cek bentrok Supir (Tidak bisa dijadwalkan jika masih ada perjalanan aktif)
         $conflictSupir = Jadwal::where('supir_id', $request->supir_id)
-            ->where('tanggal', $request->tanggal)
-            ->get()
-            ->filter(function($j) use ($jadwalWaktu) {
-                return \Carbon\Carbon::parse($j->tanggal . ' ' . $j->waktu_berangkat, 'Asia/Jakarta')->diffInHours($jadwalWaktu) < 8;
-            })->count() > 0;
+            ->whereIn('status', ['Menunggu', 'Berangkat'])
+            ->exists();
 
         if ($conflictSupir) {
             return response()->json([
                 'message' => 'The given data was invalid.',
-                'errors' => ['supir_id' => ['Supir ini sudah memiliki jadwal yang berdekatan di tanggal yang sama (bentrok).']]
+                'errors' => ['supir_id' => ['Supir ini sedang dalam perjalanan atau menunggu keberangkatan. Harap tunggu sampai statusnya Selesai.']]
             ], 422);
         }
 
@@ -126,6 +127,13 @@ class JadwalController extends Controller
         $jadwalWaktu = \Carbon\Carbon::parse($request->tanggal . ' ' . $request->waktu_berangkat, 'Asia/Jakarta');
         $now = \Carbon\Carbon::now('Asia/Jakarta');
 
+        if ($request->tanggal != $now->toDateString()) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => ['tanggal' => ['Jadwal keberangkatan hanya dapat dibuat/diubah untuk hari ini.']]
+            ], 422);
+        }
+
         if ($jadwalWaktu->isPast() && ($jadwal->tanggal != $request->tanggal || $jadwal->waktu_berangkat != $request->waktu_berangkat)) {
             return response()->json([
                 'message' => 'The given data was invalid.',
@@ -135,33 +143,27 @@ class JadwalController extends Controller
 
         // Cek bentrok Armada
         $conflictArmada = Jadwal::where('armada_id', $request->armada_id)
-            ->where('tanggal', $request->tanggal)
+            ->whereIn('status', ['Menunggu', 'Berangkat'])
             ->where('id', '!=', $id)
-            ->get()
-            ->filter(function($j) use ($jadwalWaktu) {
-                return \Carbon\Carbon::parse($j->tanggal . ' ' . $j->waktu_berangkat, 'Asia/Jakarta')->diffInHours($jadwalWaktu) < 8;
-            })->count() > 0;
+            ->exists();
 
         if ($conflictArmada) {
             return response()->json([
                 'message' => 'The given data was invalid.',
-                'errors' => ['armada_id' => ['Armada ini sudah memiliki jadwal yang berdekatan di tanggal yang sama (bentrok).']]
+                'errors' => ['armada_id' => ['Armada ini sedang dalam perjalanan atau menunggu keberangkatan. Harap tunggu sampai statusnya Selesai.']]
             ], 422);
         }
 
         // Cek bentrok Supir
         $conflictSupir = Jadwal::where('supir_id', $request->supir_id)
-            ->where('tanggal', $request->tanggal)
+            ->whereIn('status', ['Menunggu', 'Berangkat'])
             ->where('id', '!=', $id)
-            ->get()
-            ->filter(function($j) use ($jadwalWaktu) {
-                return \Carbon\Carbon::parse($j->tanggal . ' ' . $j->waktu_berangkat, 'Asia/Jakarta')->diffInHours($jadwalWaktu) < 8;
-            })->count() > 0;
+            ->exists();
 
         if ($conflictSupir) {
             return response()->json([
                 'message' => 'The given data was invalid.',
-                'errors' => ['supir_id' => ['Supir ini sudah memiliki jadwal yang berdekatan di tanggal yang sama (bentrok).']]
+                'errors' => ['supir_id' => ['Supir ini sedang dalam perjalanan atau menunggu keberangkatan. Harap tunggu sampai statusnya Selesai.']]
             ], 422);
         }
 

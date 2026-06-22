@@ -56,8 +56,8 @@
                         <select id="rute_id" name="rute_id" onchange="autoFillHarga()" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm">
                             <option value="">-- Pilih Rute Perjalanan --</option>
                             @foreach($rute as $item)
-                                <option value="{{ $item->id }}" data-harga="{{ $item->harga_dasar }}">
-                                    {{ $item->kota_asal }} - {{ $item->kota_tujuan }}
+                                <option value="{{ $item->id }}" data-harga="{{ $item->harga_dasar }}" data-tipe="{{ $item->tipe_bus }}">
+                                    {{ $item->kota_asal }} - {{ $item->kota_tujuan }} ({{ $item->tipe_bus }})
                                 </option>
                             @endforeach
                         </select>
@@ -76,7 +76,7 @@
                         <select id="armada_id" name="armada_id" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm">
                             <option value="">-- Pilih Bus --</option>
                             @foreach($armada as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama_bus }} ({{ $item->plat_nomor }})</option>
+                                <option value="{{ $item->id }}" data-tipe="{{ $item->tipe_bus }}">{{ $item->nama_bus }} ({{ $item->plat_nomor }} - {{ $item->tipe_bus }})</option>
                             @endforeach
                         </select>
                         <span class="text-xs text-danger mt-1 hidden error-field" id="err-armada_id"></span>
@@ -96,7 +96,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-gray-100 pt-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Tanggal Berangkat</label>
-                        <input type="date" id="tanggal" name="tanggal" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm">
+                        <input type="date" id="tanggal" name="tanggal" min="{{ now('Asia/Jakarta')->toDateString() }}" max="{{ now('Asia/Jakarta')->toDateString() }}" value="{{ now('Asia/Jakarta')->toDateString() }}" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm">
                         <span class="text-xs text-danger mt-1 hidden error-field" id="err-tanggal"></span>
                     </div>
                     <div>
@@ -142,14 +142,36 @@
         });
     });
 
-    // Fitur Auto Fill Harga
+    // Fitur Auto Fill Harga dan Filter Armada
     function autoFillHarga() {
         let selectedOption = $('#rute_id').find('option:selected');
         let hargaDasar = selectedOption.data('harga');
+        let tipeBus = selectedOption.data('tipe');
+
+        // Isi harga
         if (hargaDasar) {
             $('#harga_tiket').val(hargaDasar);
         } else {
             $('#harga_tiket').val('');
+        }
+
+        // Filter armada dropdown based on tipeBus
+        $('#armada_id option').each(function() {
+            if ($(this).val() === '') {
+                $(this).show(); // Always show the placeholder
+                return;
+            }
+            if (!tipeBus || $(this).data('tipe') === tipeBus) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+        
+        // Reset armada selection if the currently selected armada is hidden
+        let selectedArmada = $('#armada_id option:selected');
+        if (selectedArmada.css('display') === 'none') {
+            $('#armada_id').val('');
         }
     }
 
@@ -261,6 +283,11 @@
                 $('#waktu_berangkat').val(data.waktu_berangkat.substring(0, 5));
                 $('#harga_tiket').val(data.harga_tiket);
                 $('#status').val(data.status);
+                
+                // Trigger autoFillHarga to filter armadas but set armada back to selected after
+                setTimeout(() => {
+                    $('#armada_id').val(data.armada_id);
+                }, 100);
                 
                 $('#modal-title').text('Edit Jadwal Keberangkatan');
                 

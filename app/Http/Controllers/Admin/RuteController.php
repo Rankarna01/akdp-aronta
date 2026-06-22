@@ -32,6 +32,7 @@ class RuteController extends Controller
         $request->validate([
             'kota_asal' => 'required|string|max:255',
             'kota_tujuan' => 'required|string|max:255',
+            'tipe_bus' => 'required|in:Economy,Executive',
             'harga_dasar' => 'required|numeric|min:0',
             'status' => 'required|in:Aktif,Non-Aktif',
         ]);
@@ -57,6 +58,7 @@ class RuteController extends Controller
         $request->validate([
             'kota_asal' => 'required|string|max:255',
             'kota_tujuan' => 'required|string|max:255',
+            'tipe_bus' => 'required|in:Economy,Executive',
             'harga_dasar' => 'required|numeric|min:0',
             'status' => 'required|in:Aktif,Non-Aktif',
         ]);
