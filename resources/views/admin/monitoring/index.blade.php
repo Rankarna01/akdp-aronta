@@ -36,6 +36,37 @@
     <div id="pagination-container" class="px-6 py-4 flex items-center justify-between border-t border-gray-100 bg-gray-50/50"></div>
 </div>
 
+<!-- Modal Edit Status -->
+<div id="edit-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-fade-in">
+    <div class="bg-surface w-full max-w-md rounded-2xl shadow-xl border border-gray-100 overflow-hidden transform transition-all scale-95 duration-300" id="edit-card">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="font-semibold text-gray-800 text-base">Edit Status Perjalanan</h3>
+            <button type="button" onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <form id="edit-form" onsubmit="submitEdit(event)">
+            <input type="hidden" id="edit-id">
+            <input type="hidden" id="edit-jadwal-id" name="jadwal_id">
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Status</label>
+                    <select id="edit-status" name="status" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm" required>
+                        <option value="Persiapan">Persiapan</option>
+                        <option value="Dalam Perjalanan">Dalam Perjalanan</option>
+                        <option value="Sampai">Sampai</option>
+                        <option value="Kendala">Kendala</option>
+                    </select>
+                </div>
+                <div id="edit-keterangan-group" class="hidden">
+                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Keterangan Kendala</label>
+                    <textarea id="edit-keterangan" name="keterangan" rows="3" class="input-modern w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm" placeholder="Jelaskan kendala yang dialami..."></textarea>
+                </div>
+            </div>
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+                <button type="submit" class="px-4 py-2 text-sm font-medium bg-primary hover:bg-blue-900 text-white rounded-xl shadow-md transition">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 @endsection
 
@@ -58,6 +89,22 @@
     function formatWaktuUpdate(dateString) {
         let date = new Date(dateString);
         return date.toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) + ' WIB';
+    }
+
+    $('#edit-status').on('change', function() {
+        if ($(this).val() === 'Kendala') {
+            $('#edit-keterangan-group').removeClass('hidden');
+            $('#edit-keterangan').prop('required', true);
+        } else {
+            $('#edit-keterangan-group').addClass('hidden');
+            $('#edit-keterangan').prop('required', false);
+            $('#edit-keterangan').val('');
+        }
+    });
+
+    function closeEditModal() {
+        $('#edit-card').removeClass('scale-100 translate-y-0').addClass('scale-95');
+        setTimeout(() => { $('#edit-modal').removeClass('flex').addClass('hidden'); }, 150);
     }
 
     function fetchMonitoring(page, search) {
@@ -96,6 +143,7 @@
                                     <span class="px-3 py-1 rounded-full text-[11px] font-bold ${badgeColor}">${item.status}</span>
                                 </td>
                                 <td class="px-6 py-4 text-center space-x-1">
+                                    <button onclick="openEditModal(${item.id})" class="text-primary hover:bg-primary/10 p-2 rounded-lg transition" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
                                     <button onclick="deleteMonitoring(${item.id})" class="text-danger hover:bg-danger/10 p-2 rounded-lg transition" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
                                 </td>
                             </tr>
@@ -128,6 +176,40 @@
     }
 
 
+    function openEditModal(id) {
+        $.ajax({
+            url: `/admin/monitoring/${id}/edit`,
+            type: "GET",
+            success: function(response) {
+                $('#edit-id').val(response.id);
+                $('#edit-jadwal-id').val(response.jadwal_id);
+                $('#edit-status').val(response.status).trigger('change');
+                $('#edit-keterangan').val(response.keterangan);
+                
+                $('#edit-modal').removeClass('hidden').addClass('flex');
+                setTimeout(() => { $('#edit-card').removeClass('scale-95').addClass('scale-100'); }, 50);
+            }
+        });
+    }
+
+    function submitEdit(e) {
+        e.preventDefault();
+        let id = $('#edit-id').val();
+        let formData = $('#edit-form').serialize() + '&_method=PUT';
+        
+        $.ajax({
+            url: `/admin/monitoring/${id}`,
+            type: "POST",
+            data: formData,
+            success: function(response) {
+                if (response.success) {
+                    closeEditModal();
+                    Swal.fire({ icon: 'success', title: 'Terupdate!', text: response.message, timer: 1500, showConfirmButton: false });
+                    fetchMonitoring(currentPage, currentSearch);
+                }
+            }
+        });
+    }
 
     function deleteMonitoring(id) {
         Swal.fire({

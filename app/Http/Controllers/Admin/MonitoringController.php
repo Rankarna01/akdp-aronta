@@ -77,6 +77,13 @@ class MonitoringController extends Controller
 
         $monitoring->update($request->all());
 
+        // Otomatis ubah status jadwal utama jika bus sudah "Sampai" atau "Dalam Perjalanan"
+        if ($request->status == 'Sampai') {
+            Jadwal::where('id', $request->jadwal_id)->update(['status' => 'Selesai']);
+        } elseif ($request->status == 'Dalam Perjalanan') {
+            Jadwal::where('id', $request->jadwal_id)->update(['status' => 'Berangkat']);
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Data monitoring berhasil diperbarui!'
