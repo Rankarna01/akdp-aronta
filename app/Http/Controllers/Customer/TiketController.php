@@ -37,6 +37,11 @@ class TiketController extends Controller
             ->whereDate('tanggal', $request->tanggal)
             ->whereIn('status', ['Menunggu', 'Berangkat']);
 
+        // Jika mencari tiket untuk hari ini, sembunyikan jam yang sudah lewat
+        if ($request->tanggal == now()->toDateString()) {
+            $query->whereTime('waktu_berangkat', '>', now()->toTimeString());
+        }
+
         $jadwal = $query->orderBy('waktu_berangkat', 'asc')->get();
         $params = $request->all();
         

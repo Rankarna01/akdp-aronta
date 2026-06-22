@@ -15,8 +15,15 @@ class HomeController extends Controller
                 $query->where('status_tiket', '!=', 'Dibatalkan');
             }])
             ->where('status', 'Menunggu')
-            ->whereDate('tanggal', '>=', now())
+            ->where(function($q) {
+                $q->whereDate('tanggal', '>', now()->toDateString())
+                  ->orWhere(function($q2) {
+                      $q2->whereDate('tanggal', '=', now()->toDateString())
+                         ->whereTime('waktu_berangkat', '>', now()->toTimeString());
+                  });
+            })
             ->orderBy('tanggal', 'asc')
+            ->orderBy('waktu_berangkat', 'asc')
             ->limit(5)
             ->get();
 

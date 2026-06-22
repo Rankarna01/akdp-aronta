@@ -47,8 +47,15 @@ Route::get('/', function () {
     
     $jadwalTerdekat = Jadwal::with(['rute', 'armada'])
         ->where('status', 'Menunggu')
-        ->whereDate('tanggal', '>=', now())
+        ->where(function($q) {
+            $q->whereDate('tanggal', '>', now()->toDateString())
+              ->orWhere(function($q2) {
+                  $q2->whereDate('tanggal', '=', now()->toDateString())
+                     ->whereTime('waktu_berangkat', '>', now()->toTimeString());
+              });
+        })
         ->orderBy('tanggal', 'asc')
+        ->orderBy('waktu_berangkat', 'asc')
         ->limit(6)->get();
         
     $armadaBus = Armada::where('status', 'Aktif')->get();
