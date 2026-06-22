@@ -18,7 +18,10 @@ class JadwalController extends Controller
         // Supir harus memanggil relasi 'user' untuk mengambil namanya
         $supir = Supir::with('user')->where('status', 'Aktif')->get();
         
-        return view('admin.jadwal.index', compact('rute', 'armada', 'supir'));
+        $busyArmadas = Jadwal::whereIn('status', ['Menunggu', 'Berangkat'])->pluck('id', 'armada_id')->toArray();
+        $busySupirs = Jadwal::whereIn('status', ['Menunggu', 'Berangkat'])->pluck('id', 'supir_id')->toArray();
+
+        return view('admin.jadwal.index', compact('rute', 'armada', 'supir', 'busyArmadas', 'busySupirs'));
     }
 
     public function data(Request $request)

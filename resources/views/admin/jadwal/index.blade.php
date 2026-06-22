@@ -76,7 +76,11 @@
                         <select id="armada_id" name="armada_id" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm">
                             <option value="">-- Pilih Bus --</option>
                             @foreach($armada as $item)
-                                <option value="{{ $item->id }}" data-tipe="{{ $item->tipe_bus }}">{{ $item->nama_bus }} ({{ $item->plat_nomor }} - {{ $item->tipe_bus }})</option>
+                                @php
+                                    $isBusy = isset($busyArmadas[$item->id]);
+                                    $busyJadwalId = $isBusy ? $busyArmadas[$item->id] : '';
+                                @endphp
+                                <option value="{{ $item->id }}" data-tipe="{{ $item->tipe_bus }}" data-busy="{{ $isBusy ? '1' : '0' }}" data-busy-jadwal="{{ $busyJadwalId }}">{{ $item->nama_bus }} ({{ $item->plat_nomor }} - {{ $item->tipe_bus }})</option>
                             @endforeach
                         </select>
                         <span class="text-xs text-danger mt-1 hidden error-field" id="err-armada_id"></span>
@@ -86,7 +90,11 @@
                         <select id="supir_id" name="supir_id" class="input-modern w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm">
                             <option value="">-- Pilih Supir --</option>
                             @foreach($supir as $item)
-                                <option value="{{ $item->id }}">{{ $item->user->name }}</option>
+                                @php
+                                    $isBusy = isset($busySupirs[$item->id]);
+                                    $busyJadwalId = $isBusy ? $busySupirs[$item->id] : '';
+                                @endphp
+                                <option value="{{ $item->id }}" data-busy="{{ $isBusy ? '1' : '0' }}" data-busy-jadwal="{{ $busyJadwalId }}">{{ $item->user->name }}</option>
                             @endforeach
                         </select>
                         <span class="text-xs text-danger mt-1 hidden error-field" id="err-supir_id"></span>
@@ -147,6 +155,7 @@
         let selectedOption = $('#rute_id').find('option:selected');
         let hargaDasar = selectedOption.data('harga');
         let tipeBus = selectedOption.data('tipe');
+        let currentJadwalId = $('#jadwal-id').val();
 
         // Isi harga
         if (hargaDasar) {
@@ -155,12 +164,23 @@
             $('#harga_tiket').val('');
         }
 
-        // Filter armada dropdown based on tipeBus
+        // Filter armada dropdown based on tipeBus and busy status
         $('#armada_id option').each(function() {
             if ($(this).val() === '') {
                 $(this).show(); // Always show the placeholder
                 return;
             }
+
+            let isBusy = $(this).data('busy') == '1';
+            let busyJadwalId = $(this).data('busy-jadwal');
+
+            // If armada is busy and it's not the one assigned to the currently edited schedule, hide it
+            if (isBusy && busyJadwalId != currentJadwalId) {
+                $(this).hide();
+                return;
+            }
+
+            // Filter by bus class type
             if (!tipeBus || $(this).data('tipe') === tipeBus) {
                 $(this).show();
             } else {
@@ -172,6 +192,31 @@
         let selectedArmada = $('#armada_id option:selected');
         if (selectedArmada.css('display') === 'none') {
             $('#armada_id').val('');
+        }
+    }
+
+    function filterSupir() {
+        let currentJadwalId = $('#jadwal-id').val();
+
+        $('#supir_id option').each(function() {
+            if ($(this).val() === '') {
+                $(this).show();
+                return;
+            }
+
+            let isBusy = $(this).data('busy') == '1';
+            let busyJadwalId = $(this).data('busy-jadwal');
+            
+            if (isBusy && busyJadwalId != currentJadwalId) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+
+        let selectedSupir = $('#supir_id option:selected');
+        if (selectedSupir.css('display') === 'none') {
+            $('#supir_id').val('');
         }
     }
 
@@ -264,6 +309,10 @@
         $('.error-field').addClass('hidden').html('');
         $('#modal-title').text('Tambah Jadwal Keberangkatan');
         
+        // Ensure filters run when modal is opened
+        autoFillHarga();
+        filterSupir();
+
         $('#jadwal-modal').removeClass('hidden').addClass('flex');
         setTimeout(() => { $('#modal-card').removeClass('scale-95').addClass('scale-100'); }, 50);
     }
@@ -284,9 +333,12 @@
                 $('#harga_tiket').val(data.harga_tiket);
                 $('#status').val(data.status);
                 
-                // Trigger autoFillHarga to filter armadas but set armada back to selected after
+                // Trigger filters but set values back after
+                autoFillHarga();
+                filterSupir();
                 setTimeout(() => {
                     $('#armada_id').val(data.armada_id);
+                    $('#supir_id').val(data.supir_id);
                 }, 100);
                 
                 $('#modal-title').text('Edit Jadwal Keberangkatan');
