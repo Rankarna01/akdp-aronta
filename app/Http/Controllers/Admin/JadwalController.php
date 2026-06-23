@@ -130,14 +130,17 @@ class JadwalController extends Controller
         $jadwalWaktu = \Carbon\Carbon::parse($request->tanggal . ' ' . $request->waktu_berangkat, 'Asia/Jakarta');
         $now = \Carbon\Carbon::now('Asia/Jakarta');
 
-        if ($request->tanggal != $now->toDateString()) {
+        if ($request->tanggal != $now->toDateString() && $jadwal->tanggal != $request->tanggal) {
             return response()->json([
                 'message' => 'The given data was invalid.',
                 'errors' => ['tanggal' => ['Jadwal keberangkatan hanya dapat dibuat/diubah untuk hari ini.']]
             ], 422);
         }
 
-        if ($jadwalWaktu->isPast() && ($jadwal->tanggal != $request->tanggal || $jadwal->waktu_berangkat != $request->waktu_berangkat)) {
+        $oldWaktu = date('H:i', strtotime($jadwal->waktu_berangkat));
+        $newWaktu = date('H:i', strtotime($request->waktu_berangkat));
+
+        if ($jadwalWaktu->isPast() && ($jadwal->tanggal != $request->tanggal || $oldWaktu != $newWaktu)) {
             return response()->json([
                 'message' => 'The given data was invalid.',
                 'errors' => ['waktu_berangkat' => ['Waktu keberangkatan tidak boleh kurang dari waktu saat ini.']]
