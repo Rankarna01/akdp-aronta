@@ -229,7 +229,11 @@
                 @forelse($armadaBus as $armada)
                     <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition group">
                         <div class="h-40 bg-gray-100 relative flex items-center justify-center overflow-hidden">
-                            <i class="fa-solid fa-bus text-6xl text-gray-300 group-hover:scale-110 transition-transform duration-500"></i>
+                            @if($armada->gambar)
+                                <img src="{{ asset('storage/' . $armada->gambar) }}" alt="{{ $armada->nama_bus }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            @else
+                                <i class="fa-solid fa-bus text-6xl text-gray-300 group-hover:scale-110 transition-transform duration-500"></i>
+                            @endif
                             <div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         </div>
                         <div class="p-6">
