@@ -21,7 +21,6 @@ use App\Http\Controllers\Admin\TiketController;
 use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\TiketDigitalController;
 use App\Http\Controllers\Admin\LaporanController;
-use App\Http\Controllers\Admin\LogAktivitasController;
 use App\Http\Controllers\Admin\MetodePembayaranMasterController;
 
 // Import Controller Driver
@@ -164,11 +163,6 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
         Route::get('/penumpang/data', [LaporanController::class, 'penumpangData'])->name('penumpang.data');
         Route::get('/penumpang/cetak', [LaporanController::class, 'cetakPenumpang'])->name('penumpang.cetak');
     });
-
-    // Modul Log Aktivitas
-    Route::get('/log-aktivitas', [LogAktivitasController::class, 'index'])->name('log-aktivitas.index');
-    Route::get('/log-aktivitas/data', [LogAktivitasController::class, 'data'])->name('log-aktivitas.data');
-    Route::delete('/log-aktivitas/clear', [LogAktivitasController::class, 'clearAll'])->name('log-aktivitas.clear');
 
 });
 
