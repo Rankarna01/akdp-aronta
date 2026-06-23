@@ -20,6 +20,19 @@
     <style>
         .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
         .hero-pattern { background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E'); }
+        
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marquee 25s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
     </style>
 </head>
 <body class="bg-background font-sans antialiased text-gray-800">
@@ -102,79 +115,97 @@
         </div>
     </section>
 
-    <section id="rute" class="py-24 bg-background">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
+    <section id="rute" class="py-24 bg-background overflow-hidden relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+            <div class="text-center">
                 <h2 class="text-3xl font-bold text-gray-800 mb-4">Rute Perjalanan Populer</h2>
                 <p class="text-secondary max-w-2xl mx-auto">Kami melayani berbagai rute strategis antar kota dalam provinsi untuk mendukung mobilitas Anda sehari-hari.</p>
             </div>
+        </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                @forelse($rutePopuler as $rute)
-                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg hover:border-primary/30 transition group cursor-pointer">
-                        <div class="w-12 h-12 bg-blue-50 text-primary rounded-full flex items-center justify-center text-xl mb-6 group-hover:bg-primary group-hover:text-white transition">
-                            <i class="fa-solid fa-map-location-dot"></i>
+        <div class="relative w-full overflow-hidden pb-4">
+            <!-- Blur overlay di pinggir kiri dan kanan agar animasi terlihat halus -->
+            <div class="absolute left-0 top-0 w-16 h-full bg-gradient-to-r from-background to-transparent z-10"></div>
+            <div class="absolute right-0 top-0 w-16 h-full bg-gradient-to-l from-background to-transparent z-10"></div>
+            
+            <div class="animate-marquee gap-4 px-4">
+                <!-- Kita melooping 2 kali agar saat scroll selesai, elemen selanjutnya sudah siap menyambung -->
+                @for($i = 0; $i < 2; $i++)
+                    @forelse($rutePopuler as $rute)
+                        <div class="bg-white rounded-2xl px-6 py-5 shadow-sm border border-gray-100 flex items-center justify-between min-w-[320px] hover:shadow-md hover:border-primary/30 transition group cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-blue-50 text-primary rounded-xl flex items-center justify-center text-sm group-hover:bg-primary group-hover:text-white transition">
+                                    <i class="fa-solid fa-map-location-dot"></i>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Rute</span>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-gray-800 text-sm whitespace-nowrap">{{ $rute->kota_asal }}</span>
+                                        <i class="fa-solid fa-arrow-right text-gray-300 text-[10px] group-hover:text-primary transition"></i>
+                                        <span class="font-bold text-gray-800 text-sm whitespace-nowrap">{{ $rute->kota_tujuan }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-px h-8 bg-gray-100 mx-4"></div>
+                                <a href="{{ route('register') }}" class="text-xs font-bold text-primary hover:text-blue-900 whitespace-nowrap transition">Cek Tiket &rarr;</a>
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-bold text-gray-800">{{ $rute->kota_asal }}</h3>
-                            <i class="fa-solid fa-arrow-right text-gray-300 group-hover:text-primary transition"></i>
-                            <h3 class="text-lg font-bold text-gray-800">{{ $rute->kota_tujuan }}</h3>
-                        </div>
-                        <div class="pt-4 border-t border-gray-50 flex justify-between items-center text-xs">
-                            <span class="text-gray-500"><i class="fa-solid fa-stopwatch mr-1"></i> {{ $rute->estimasi_waktu }}</span>
-                            <a href="{{ route('register') }}" class="font-bold text-primary hover:underline">Cek Tiket &rarr;</a>
-                        </div>
-                    </div>
-                @empty
-                    <div class="col-span-full text-center py-10 bg-white rounded-2xl border border-gray-100">
-                        <p class="text-gray-500">Belum ada rute aktif yang tersedia.</p>
-                    </div>
-                @endforelse
+                    @empty
+                        @if($i == 0)
+                            <div class="w-full text-center py-4 text-gray-500 text-sm">
+                                Belum ada rute aktif yang tersedia.
+                            </div>
+                        @endif
+                    @endforelse
+                @endfor
             </div>
         </div>
     </section>
 
-    <section id="jadwal" class="py-24 bg-white relative">
+    <section id="jadwal" class="py-24 bg-white relative border-t border-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
                 <div>
-                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Jadwal Keberangkatan Terdekat</h2>
-                    <p class="text-secondary max-w-2xl">Jangan sampai kehabisan, pesan kursi Anda di jadwal terdekat hari ini.</p>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3 tracking-tight">Jadwal Keberangkatan Terdekat</h2>
+                    <p class="text-secondary text-sm md:text-base max-w-2xl">Jangan sampai kehabisan, pesan kursi Anda di jadwal terdekat hari ini.</p>
                 </div>
-                <a href="{{ route('register') }}" class="bg-gray-50 hover:bg-gray-100 text-primary border border-gray-200 font-bold px-6 py-3 rounded-xl transition flex items-center gap-2 whitespace-nowrap">
+                <a href="{{ route('register') }}" class="bg-primary/5 hover:bg-primary/10 text-primary border border-primary/20 font-bold px-6 py-3 rounded-xl transition flex items-center justify-center gap-2 whitespace-nowrap text-sm">
                     Lihat Semua Jadwal <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 @forelse($jadwalTerdekat as $jadwal)
-                    <div class="bg-background rounded-3xl p-6 border border-gray-100 relative overflow-hidden group">
-                        <div class="absolute top-0 left-0 w-1.5 h-full bg-success"></div>
+                    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative group flex flex-col justify-between h-full">
+                        <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary to-blue-400"></div>
                         
-                        <div class="flex justify-between items-start mb-6">
-                            <div>
-                                <p class="text-2xl font-black text-gray-800 tracking-tight">{{ substr($jadwal->waktu_berangkat, 0, 5) }} <span class="text-sm font-bold text-gray-400">WIB</span></p>
-                                <p class="text-[11px] text-gray-500 font-medium uppercase tracking-wider mt-1">{{ \Carbon\Carbon::parse($jadwal->tanggal)->translatedFormat('l, d F Y') }}</p>
+                        <div>
+                            <div class="flex justify-between items-start mb-6 pt-2">
+                                <div>
+                                    <p class="text-2xl font-black text-gray-900 tracking-tight">{{ substr($jadwal->waktu_berangkat, 0, 5) }} <span class="text-sm font-bold text-gray-400">WIB</span></p>
+                                    <p class="text-[11px] text-gray-500 font-medium uppercase tracking-wider mt-1"><i class="fa-regular fa-calendar mr-1"></i> {{ \Carbon\Carbon::parse($jadwal->tanggal)->translatedFormat('l, d F Y') }}</p>
+                                </div>
+                                <span class="bg-success/10 text-success text-[10px] font-bold px-3 py-1 rounded-md uppercase border border-success/20">Tersedia</span>
                             </div>
-                            <span class="bg-success/10 text-success text-[10px] font-bold px-3 py-1 rounded-full uppercase border border-success/20">Tersedia</span>
+
+                            <div class="flex items-center gap-4 mb-6 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                                <div class="w-12 h-12 bg-white text-primary rounded-xl shadow-sm flex items-center justify-center border border-gray-100">
+                                    <i class="fa-solid fa-bus text-lg"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-base font-bold text-gray-800">{{ $jadwal->rute->kota_asal }} <i class="fa-solid fa-arrow-right text-[10px] text-gray-300 mx-1"></i> {{ $jadwal->rute->kota_tujuan }}</h4>
+                                    <p class="text-xs font-semibold text-primary mt-1">{{ $jadwal->armada->nama_bus }} <span class="text-gray-400 font-normal">| {{ $jadwal->armada->tipe_bus }}</span></p>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="flex items-center gap-3 mb-6 bg-white p-3 rounded-xl border border-gray-50">
-                            <div class="w-10 h-10 bg-blue-50 text-primary rounded-full flex items-center justify-center">
-                                <i class="fa-solid fa-bus text-sm"></i>
-                            </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100 mt-2">
                             <div>
-                                <h4 class="text-sm font-bold text-gray-800">{{ $jadwal->rute->kota_asal }} - {{ $jadwal->rute->kota_tujuan }}</h4>
-                                <p class="text-xs text-secondary mt-0.5">{{ $jadwal->armada->nama_bus }}</p>
+                                <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-0.5">Harga Mulai</p>
+                                <p class="text-xl font-black text-gray-800">Rp {{ number_format($jadwal->harga_tiket, 0, ',', '.') }}</p>
                             </div>
-                        </div>
-
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-0.5">Harga Tiket</p>
-                                <p class="text-lg font-bold text-primary">Rp {{ number_format($jadwal->harga_tiket, 0, ',', '.') }}</p>
-                            </div>
-                            <a href="{{ route('register') }}" class="bg-primary text-white font-bold px-5 py-2.5 rounded-xl text-xs hover:bg-blue-900 transition shadow-md shadow-primary/20">Pesan</a>
+                            <a href="{{ route('register') }}" class="bg-primary text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-blue-900 transition shadow-md hover:shadow-lg flex items-center gap-2">Pesan <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
                         </div>
                     </div>
                 @empty
