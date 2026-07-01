@@ -9,7 +9,7 @@ class Rute extends Model
 {
     use HasFactory;
 
-    protected $table = 'rute'; // Pastikan tanpa 's'
+    protected $table = 'rute'; 
 
     protected $fillable = [
         'kota_asal',

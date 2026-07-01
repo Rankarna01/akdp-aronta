@@ -9,7 +9,7 @@ class MonitoringPerjalanan extends Model
 {
     use HasFactory;
 
-    protected $table = 'monitoring_perjalanan'; // Paksa nama tabel
+    protected $table = 'monitoring_perjalanan'; 
 
     protected $fillable = [
         'jadwal_id',
@@ -18,7 +18,6 @@ class MonitoringPerjalanan extends Model
         'keterangan',
     ];
 
-    // Relasi ke Jadwal
     public function jadwal()
     {
         return $this->belongsTo(Jadwal::class, 'jadwal_id');

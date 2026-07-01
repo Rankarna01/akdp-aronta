@@ -9,7 +9,7 @@ class Penumpang extends Model
 {
     use HasFactory;
 
-    protected $table = 'penumpang'; // Tanpa akhiran s
+    protected $table = 'penumpang'; 
 
     protected $fillable = [
         'user_id',
@@ -20,7 +20,7 @@ class Penumpang extends Model
         'alamat',
     ];
 
-    // Relasi ke tabel users
+   
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

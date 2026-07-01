@@ -8,12 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Gunakan nama tabel 'rute' (tanpa s)
         Schema::create('rute', function (Blueprint $table) {
             $table->id();
             $table->string('kota_asal');
             $table->string('kota_tujuan');
-            $table->bigInteger('harga_dasar'); // Harga standar tiket
+            $table->bigInteger('harga_dasar'); 
             $table->enum('status', ['Aktif', 'Non-Aktif'])->default('Aktif');
             $table->timestamps();
         });

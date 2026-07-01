@@ -9,7 +9,7 @@ class Kursi extends Model
 {
     use HasFactory;
 
-    protected $table = 'kursi'; // Paksa nama tabel tanpa s
+    protected $table = 'kursi'; 
 
     protected $fillable = [
         'armada_id',
@@ -17,7 +17,6 @@ class Kursi extends Model
         'status',
     ];
 
-    // Relasi: 1 Kursi merujuk ke 1 Armada Bus
     public function armada()
     {
         return $this->belongsTo(Armada::class, 'armada_id');
