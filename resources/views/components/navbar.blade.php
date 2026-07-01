@@ -31,7 +31,6 @@
             <!-- Dropdown Menu -->
             <div class="absolute right-0 mt-2 w-48 bg-surface rounded-xl shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right">
                 <div class="py-2">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary transition"><i class="fa-solid fa-gear mr-2"></i> Pengaturan</a>
                     <div class="border-t border-gray-100 my-1"></div>
                     <!-- Form Logout Dummy -->
                     <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
